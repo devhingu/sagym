@@ -1,6 +1,6 @@
 # gym
 
-A new Flutter project.
+Gym Management Flutter Application.
 
 ## Getting Started
 
