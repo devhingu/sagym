@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
-import 'package:gym/ui/auth/constants.dart';
-import 'package:gym/ui/auth/login/sign_up_screen.dart';
+import 'package:gym/constants/constants.dart';
+import 'package:gym/ui/auth/constants/auth_constants.dart';
+import 'package:gym/ui/auth/screens/forgotpassword/forgot_password.dart';
+import 'package:gym/ui/auth/screens/signup/sign_up_screen.dart';
 import 'package:gym/widgets/auth/bottom_rich_text.dart';
 import 'package:gym/widgets/auth_custom_button.dart';
 import 'package:gym/widgets/custom_button.dart';
+import 'package:gym/widgets/reusable/reusable_methods.dart';
 import 'package:gym/widgets/text_form_field_container.dart';
+import 'package:gym/widgets/top_logo_title_widget.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);
@@ -21,44 +25,53 @@ class _SignInScreenState extends State<SignInScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              topLogoText(),
+              const TopLogoTitleWidget(),
               heightSizedBox(height: 40.0),
-              const TextFormFieldContainer(
-                label: "Email",
+              TextFormFieldContainer(
+                label: kEmail,
                 obscureText: false,
               ),
-              const TextFormFieldContainer(
-                label: "Password",
+              TextFormFieldContainer(
+                label: kPassword,
                 obscureText: true,
               ),
               heightSizedBox(height: 15.0),
               CustomButton(
-                title: "Sign In",
+                title: kSignIn,
                 onPress: () {
                   debugPrint("done");
                 },
               ),
               heightSizedBox(height: 5.0),
-              const Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: EdgeInsets.only(right: 32.0),
-                  child: Text(
-                    "Forgot Password?",
-                    style: kForgotPasswordTextStyle,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ForgotPasswordScreen(),
+                    ),
+                  );
+                },
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 32.0),
+                    child: Text(
+                      kForgotPassword,
+                      style: kForgotPasswordTextStyle,
+                    ),
                   ),
                 ),
               ),
               const Padding(
-                padding: EdgeInsets.only(top: 16.0, right: 32.0, left: 32.0),
+                padding: EdgeInsets.only(top: 16.0, left: 32.0, right: 32.0),
                 child: Divider(),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 16.0, horizontal: 32.0),
+                padding: kAuthPadding,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -83,8 +96,8 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
               ),
               BottomRichText(
-                startText: "Don't have an account? ",
-                endText: "Sign up",
+                startText: kDoNotHaveAnAccount,
+                endText: kSignUp,
                 onPress: () {
                   Navigator.push(
                     context,
@@ -100,32 +113,24 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
     );
   }
-
-  Column topLogoText() {
-    return Column(
-      children: [
-        Image.asset(
-          "assets/dumbbell.png",
-          height: 60.0,
-          color: kMainColor,
-        ),
-        const Text(
-          "Body Fit Gym",
-          style: kAppTitleTextStyle,
-        ),
-      ],
-    );
-  }
-
-  SizedBox widthSizedBox({required double width}) {
-    return SizedBox(
-      width: width,
-    );
-  }
-
-  SizedBox heightSizedBox({required double height}) {
-    return SizedBox(
-      height: height,
-    );
-  }
 }
+
+// Row(children: <Widget>[
+// Expanded(
+// child: Container(
+// margin: const EdgeInsets.only(left: 32.0, right: 10.0),
+// child: const Divider(
+// color: kGreyColor,
+// height: 50,
+// )),
+// ),
+// const Text("OR", style: kTextFormFieldLabelTextStyle,),
+// Expanded(
+// child: Container(
+// margin: const EdgeInsets.only(left: 10.0, right: 32.0),
+// child: const Divider(
+// color: kGreyDarkColor,
+// height: 50,
+// )),
+// ),
+// ]),

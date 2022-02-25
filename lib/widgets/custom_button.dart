@@ -19,9 +19,7 @@ class CustomButton extends StatelessWidget {
       child: Container(
         height: 55.0,
         width: double.infinity,
-        margin: const EdgeInsets.symmetric(
-          horizontal: 32.0,
-        ),
+        margin: kCustomButtonMargin,
         decoration: kCustomButtonBoxDecoration,
         child: Center(
           child: Text(

@@ -1,8 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
-import 'package:gym/ui/auth/login/sign_in_screen.dart';
-import 'package:gym/ui/auth/login/sign_up_screen.dart';
-import 'package:gym/ui/home_screen.dart';
+import 'package:gym/ui/dashboard/screens/home_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -21,9 +20,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   final List<Widget> _children = [
-    const SignInScreen(),
-    const SignUpScreen(),
-    const HomeScreen(),
     const HomeScreen(),
   ];
 
@@ -49,9 +45,9 @@ class _HomePageState extends State<HomePage> {
       );
 
   BottomNavigationBar bottomNavBar() => BottomNavigationBar(
-    iconSize: 32.0,
-    showSelectedLabels: true,
-    showUnselectedLabels: true,
+    iconSize: 26.0,
+    showSelectedLabels: false,
+    showUnselectedLabels: false,
     selectedItemColor: Colors.white,
     unselectedItemColor: Colors.white54,
     currentIndex: _selectedIndex,
@@ -59,19 +55,19 @@ class _HomePageState extends State<HomePage> {
     type: BottomNavigationBarType.fixed,
     items: const [
       BottomNavigationBarItem(
-        icon: Icon(Icons.home),
+        icon: Icon(CupertinoIcons.home),
         label: "Home"
       ),
       BottomNavigationBarItem(
-        icon: Icon(Icons.person),
+        icon: Icon(CupertinoIcons.person_2_fill),
         label: "Profile"
       ),
       BottomNavigationBarItem(
-        icon: Icon(Icons.camera),
+        icon: Icon(CupertinoIcons.location),
         label: "Camera"
       ),
       BottomNavigationBarItem(
-          icon: Icon(Icons.camera),
+          icon: Icon(CupertinoIcons.profile_circled),
           label: "Camera"
       ),
     ],

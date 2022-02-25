@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
@@ -28,6 +29,7 @@ class TextFormFieldContainer extends StatelessWidget {
           labelStyle: kTextFormFieldLabelTextStyle,
           focusedBorder: textFormFieldInputBorder(),
           floatingLabelBehavior: FloatingLabelBehavior.always,
+          //suffixIcon: label == "Password" ? Icon(CupertinoIcons.eye) : null,
         ),
       ),
     );

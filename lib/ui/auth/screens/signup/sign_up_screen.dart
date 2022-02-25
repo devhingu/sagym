@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
+import 'package:gym/constants/constants.dart';
 import 'package:gym/home_page.dart';
-import 'package:gym/ui/auth/constants.dart';
-import 'package:gym/ui/auth/login/sign_in_screen.dart';
+import 'package:gym/ui/auth/constants/auth_constants.dart';
+import 'package:gym/ui/auth/screens/login/sign_in_screen.dart';
 import 'package:gym/widgets/auth/bottom_rich_text.dart';
 import 'package:gym/widgets/auth_custom_button.dart';
 import 'package:gym/widgets/custom_button.dart';
+import 'package:gym/widgets/reusable/reusable_methods.dart';
 import 'package:gym/widgets/text_form_field_container.dart';
+import 'package:gym/widgets/top_logo_title_widget.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -25,23 +28,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              topLogoText(),
+              const TopLogoTitleWidget(),
               heightSizedBox(height: 40.0),
-              const TextFormFieldContainer(
-                label: "Username",
+              TextFormFieldContainer(
+                label: kUsername,
                 obscureText: false,
               ),
-              const TextFormFieldContainer(
-                label: "Email",
+              TextFormFieldContainer(
+                label: kEmail,
                 obscureText: false,
               ),
-              const TextFormFieldContainer(
-                label: "Password",
+              TextFormFieldContainer(
+                label: kPassword,
                 obscureText: true,
               ),
               heightSizedBox(height: 15.0),
               CustomButton(
-                title: "Sign Up",
+                title: kSignUp,
                 onPress: () {
                   Navigator.push(
                     context,
@@ -52,13 +55,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 },
               ),
               const Padding(
-                padding:
-                    EdgeInsets.only(top: 16.0, right: 32.0, left: 32.0),
+                padding: EdgeInsets.only(top: 16.0, right: 32.0, left: 32.0),
                 child: Divider(),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 16.0, horizontal: 32.0),
+                padding: kAuthPadding,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -83,8 +84,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               BottomRichText(
-                startText: "Already have an account? ",
-                endText: "Sign in",
+                startText: kAlreadyHaveAnAccount,
+                endText: kSignIn,
                 onPress: () {
                   Navigator.push(
                     context,
@@ -98,34 +99,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  SizedBox widthSizedBox({required double width}) {
-    return SizedBox(
-      width: width,
-    );
-  }
-
-  SizedBox heightSizedBox({required double height}) {
-    return SizedBox(
-      height: height,
-    );
-  }
-
-  Column topLogoText() {
-    return Column(
-      children: [
-        Image.asset(
-          "assets/dumbbell.png",
-          height: 60.0,
-          color: kMainColor,
-        ),
-        const Text(
-          "Body Fit Gym",
-          style: kAppTitleTextStyle,
-        ),
-      ],
     );
   }
 }

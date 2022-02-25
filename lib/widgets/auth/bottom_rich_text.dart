@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gym/ui/auth/constants.dart';
+import 'package:gym/ui/auth/constants/auth_constants.dart';
 
 class BottomRichText extends StatelessWidget {
   final String startText;

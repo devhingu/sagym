@@ -29,7 +29,7 @@ class AuthCustomButton extends StatelessWidget {
       ),
       style: ElevatedButton.styleFrom(
         primary: kWhiteColor,
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        padding: const EdgeInsets.all(10.0),
       ),
     );
   }

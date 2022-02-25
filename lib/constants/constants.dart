@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 import 'color_constants.dart';
 
+const kAuthPadding = EdgeInsets.symmetric(
+  vertical: 16.0,
+  horizontal: 32.0,
+);
+
+const kCustomButtonMargin = EdgeInsets.symmetric(
+  horizontal: 32.0,
+);
+
 const kAuthButtonTextStyle = TextStyle(
   color: kBlackColor,
   fontSize: 16.0,
@@ -19,7 +28,7 @@ BoxDecoration kCustomButtonBoxDecoration = BoxDecoration(
 const kTextFormFieldLabelTextStyle = TextStyle(
   fontSize: 18.0,
   fontWeight: FontWeight.normal,
-  color: kGreyLightColor,
+  color: kGreyDarkColor,
 );
 
 const kTextFormFieldTextStyle = TextStyle(
