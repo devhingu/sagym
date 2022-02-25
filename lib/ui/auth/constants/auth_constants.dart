@@ -15,6 +15,7 @@ String kForgotPassword = "Forgot Password?";
 String kTitleBodyFitGym = "Body Fit Gym";
 String kDoNotHaveAnAccount = "Don't have an account? ";
 String kAlreadyHaveAnAccount = "Already have an account? ";
+String kSendEmailForForgotPassword = "We're sending you link for generate new password on Email!";
 
 //image paths
 String kGoogleImagePath = "assets/google.png";
@@ -22,12 +23,6 @@ String kFacebookImagePath = "assets/facebook.png";
 String kDumbbellImagePath = "assets/dumbbell.png";
 
 //text styles
-const kAppTitleTextStyle = TextStyle(
-  fontSize: 20.0,
-  fontWeight: FontWeight.bold,
-  color: kBlackColor,
-);
-
 const kForgotPasswordTextStyle = TextStyle(
   color: kGreyColor,
   fontSize: 16.0,
@@ -42,4 +37,10 @@ const kBottomEndTextStyle = TextStyle(
 const kBottomStartTextStyle = TextStyle(
   color: kBlackColor,
   fontFamily: "Poppins",
+);
+
+//paddings
+const kAuthPadding = EdgeInsets.symmetric(
+  vertical: 16.0,
+  horizontal: 32.0,
 );

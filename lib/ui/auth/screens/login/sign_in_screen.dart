@@ -5,7 +5,8 @@ import 'package:gym/ui/auth/constants/auth_constants.dart';
 import 'package:gym/ui/auth/screens/forgotpassword/forgot_password.dart';
 import 'package:gym/ui/auth/screens/signup/sign_up_screen.dart';
 import 'package:gym/widgets/auth/bottom_rich_text.dart';
-import 'package:gym/widgets/auth_custom_button.dart';
+import 'package:gym/widgets/auth/auth_custom_button.dart';
+import 'package:gym/widgets/auth/social_media_button.dart';
 import 'package:gym/widgets/custom_button.dart';
 import 'package:gym/widgets/reusable/reusable_methods.dart';
 import 'package:gym/widgets/text_form_field_container.dart';
@@ -33,68 +34,26 @@ class _SignInScreenState extends State<SignInScreen> {
               TextFormFieldContainer(
                 label: kEmail,
                 obscureText: false,
+                inputType: TextInputType.emailAddress, margin:  kAuthPadding,
               ),
               TextFormFieldContainer(
                 label: kPassword,
                 obscureText: true,
+                inputType: TextInputType.visiblePassword,
+                margin:  kAuthPadding,
               ),
               heightSizedBox(height: 15.0),
               CustomButton(
                 title: kSignIn,
-                onPress: () {
-                  debugPrint("done");
-                },
+                onPress: () {},
               ),
               heightSizedBox(height: 5.0),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ForgotPasswordScreen(),
-                    ),
-                  );
-                },
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 32.0),
-                    child: Text(
-                      kForgotPassword,
-                      style: kForgotPasswordTextStyle,
-                    ),
-                  ),
-                ),
-              ),
+              forgotPasswordWidget(),
               const Padding(
-                padding: EdgeInsets.only(top: 16.0, left: 32.0, right: 32.0),
+                padding: kDividerPadding,
                 child: Divider(),
               ),
-              Padding(
-                padding: kAuthPadding,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: AuthCustomButton(
-                        title: kGoogle,
-                        onPress: () {},
-                        imagePath: kGoogleImagePath,
-                      ),
-                    ),
-                    widthSizedBox(width: 20.0),
-                    Expanded(
-                      flex: 1,
-                      child: AuthCustomButton(
-                        title: kFacebook,
-                        onPress: () {},
-                        imagePath: kFacebookImagePath,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              const SocialMediaButton(),
               BottomRichText(
                 startText: kDoNotHaveAnAccount,
                 endText: kSignUp,
@@ -113,6 +72,27 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
     );
   }
+
+  GestureDetector forgotPasswordWidget() => GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ForgotPasswordScreen(),
+            ),
+          );
+        },
+        child: Align(
+          alignment: Alignment.topRight,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 32.0),
+            child: Text(
+              kForgotPassword,
+              style: kForgotPasswordTextStyle,
+            ),
+          ),
+        ),
+      );
 }
 
 // Row(children: <Widget>[

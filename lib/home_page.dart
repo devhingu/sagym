@@ -38,20 +38,21 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: kFloatingActionButtonColor,
         child: const Icon(
           Icons.add,
-          color: kBlackColor,
+          color: kWhiteColor,
           size: 30.0,
         ),
         onPressed: () {},
+        elevation: 8.0,
       );
 
   BottomNavigationBar bottomNavBar() => BottomNavigationBar(
     iconSize: 26.0,
     showSelectedLabels: false,
     showUnselectedLabels: false,
-    selectedItemColor: Colors.white,
-    unselectedItemColor: Colors.white54,
+    selectedItemColor: kMainColor,
+    unselectedItemColor: kGreyColor,
     currentIndex: _selectedIndex,
-    backgroundColor: kBlackColor,
+    backgroundColor: Colors.white,
     type: BottomNavigationBarType.fixed,
     items: const [
       BottomNavigationBarItem(

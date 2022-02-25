@@ -2,24 +2,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
+import 'package:gym/ui/auth/constants/auth_constants.dart';
 
 class TextFormFieldContainer extends StatelessWidget {
   final String label;
   final bool obscureText;
+  final TextInputType inputType;
+  final EdgeInsetsGeometry margin;
 
   const TextFormFieldContainer({
     Key? key,
-    required this.label, required this.obscureText,
+    required this.label, required this.obscureText, required this.inputType, required this.margin,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 55.0,
-      margin: const EdgeInsets.symmetric(
-        vertical: 16.0,
-        horizontal: 32.0,
-      ),
+     margin:margin,
       child: TextFormField(
         obscureText: obscureText,
         style: kTextFormFieldTextStyle,
@@ -31,6 +31,7 @@ class TextFormFieldContainer extends StatelessWidget {
           floatingLabelBehavior: FloatingLabelBehavior.always,
           //suffixIcon: label == "Password" ? Icon(CupertinoIcons.eye) : null,
         ),
+        keyboardType: inputType,
       ),
     );
   }

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 const kBlackColor = Color(0xFF262A2E);
 const kWhiteColor = Color(0xE6FFFFFF);
+const kLightWhiteColor = Colors.white70;
+
 const kGreyColor = Color(0xFF9AA3AD);
-const kGreyDarkColor = Color(0xFF797B89);
+const kDarkGreyColor = Color(0xFF797B89);
 const kMainColor = Color(0xFF247CEC);
 const kBackgroundColor = Color(0xFFFAFAFB);
 const kButtonColor = Color(0xFF217AEC);
