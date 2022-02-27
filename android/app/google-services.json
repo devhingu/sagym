@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1062097194736",
+    "project_id": "sagym-28a60",
+    "storage_bucket": "sagym-28a60.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1062097194736:android:d7ed812c3edb1600227c35",
+        "android_client_info": {
+          "package_name": "com.sa.gym"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1062097194736-pn363euu8iuoe1e02nmpb22ca85nuqkd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sa.gym",
+            "certificate_hash": "c8dd97723985b22ea0295215c1993778ea01a838"
+          }
+        },
+        {
+          "client_id": "1062097194736-bipkb94tl30gg4mdaf1r1j7tvk3ahugf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyHV90WshjN-zudnqMzy-hKOM44HTYo7k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1062097194736-bipkb94tl30gg4mdaf1r1j7tvk3ahugf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
