@@ -4,10 +4,14 @@ import 'package:gym/constants/constants.dart';
 import 'package:gym/ui/auth/constants/auth_constants.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
 import 'package:gym/ui/dashboard/screens/add_member_payment_screen.dart';
+import 'package:gym/ui/dashboard/screens/home_page.dart';
+import 'package:gym/ui/dashboard/screens/home_screen.dart';
 import 'package:gym/widgets/reusable/reusable_methods.dart';
 import 'package:gym/widgets/text_form_field_container.dart';
 
 class AddMemberScreen extends StatefulWidget {
+  static const String id = "add_member_screen";
+
   const AddMemberScreen({Key? key}) : super(key: key);
 
   @override
@@ -15,144 +19,107 @@ class AddMemberScreen extends StatefulWidget {
 }
 
 class _AddMemberScreenState extends State<AddMemberScreen> {
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _dobController = TextEditingController();
+  final TextEditingController _heightController = TextEditingController();
+  final TextEditingController _weightController = TextEditingController();
+  final TextEditingController _batchController = TextEditingController();
+  final FocusNode _firstNameFocusNode = FocusNode();
+  final FocusNode _lastNameFocusNode = FocusNode();
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _phoneFocusNode = FocusNode();
+  final FocusNode _addressFocusNode = FocusNode();
+  final FocusNode _dobFocusNode = FocusNode();
+  final FocusNode _heightFocusNode = FocusNode();
+  final FocusNode _weightFocusNode = FocusNode();
+  final FocusNode _batchFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _firstNameFocusNode.dispose();
+    _lastNameFocusNode.dispose();
+    _emailFocusNode.dispose();
+    _phoneFocusNode.dispose();
+    _addressFocusNode.dispose();
+    _dobFocusNode.dispose();
+    _heightFocusNode.dispose();
+    _weightFocusNode.dispose();
+    _batchFocusNode.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    //final size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Stack(
             children: [
-              backgroundContainer(),
+              _backgroundContainer(),
               Container(
-                padding: const EdgeInsets.all(16.0),
+                padding: kAllSideBigPadding,
                 margin: const EdgeInsets.only(
                   top: 50.0,
                 ),
                 child: Container(
                   decoration: kCardBoxDecoration,
                   child: Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: kAllSidePadding,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const Text(
-                          "Personal Details",
+                        Text(
+                          kPersonalDetails,
                           style: kTextFormFieldTextStyle,
                         ),
                         Row(
                           children: [
-                            const Expanded(
-                              child: TextFormFieldContainer(
-                                margin: EdgeInsets.only(top: 16.0),
-                                label: "First Name",
-                                obscureText: false,
-                                inputType: TextInputType.text,
-                              ),
+                            Expanded(
+                              child: _firstNameTextField(),
                             ),
                             widthSizedBox(width: 10.0),
-                            const Expanded(
-                              child: TextFormFieldContainer(
-                                margin: EdgeInsets.only(top: 16.0),
-                                label: "Last Name",
-                                obscureText: false,
-                                inputType: TextInputType.text,
-                              ),
+                            Expanded(
+                              child: _lastNameTextField(),
                             ),
                           ],
                         ),
-                        const TextFormFieldContainer(
-                          margin: EdgeInsets.only(top: 16.0),
-                          label: "Email",
-                          obscureText: false,
-                          inputType: TextInputType.emailAddress,
-                        ),
-                        const TextFormFieldContainer(
-                          margin: EdgeInsets.only(top: 16.0),
-                          label: "Mobile Number",
-                          obscureText: false,
-                          inputType: TextInputType.phone,
-                        ),
-                        const TextFormFieldContainer(
-                          margin: EdgeInsets.only(top: 16.0),
-                          label: "Address",
-                          obscureText: false,
-                          inputType: TextInputType.streetAddress,
-                        ),
-                        const TextFormFieldContainer(
-                          margin: EdgeInsets.only(top: 16.0),
-                          label: "Mobile Number",
-                          obscureText: false,
-                          inputType: TextInputType.phone,
-                        ),
+                        _emailTextField(),
+                        _mobileNumberTextField(),
+                        _addressTextField(),
                         Row(
                           children: [
-                            const Expanded(
+                            Expanded(
+                              flex: 3,
+                              child: _dobTextField(),
+                            ),
+                            widthSizedBox(width: 10.0),
+                            Expanded(
                               flex: 2,
-                              child: TextFormFieldContainer(
-                                margin: EdgeInsets.only(top: 16.0),
-                                label: "DOB",
-                                obscureText: false,
-                                inputType: TextInputType.text,
-                              ),
+                              child: _heightTextField(),
                             ),
                             widthSizedBox(width: 10.0),
-                            const Expanded(
-                              child: TextFormFieldContainer(
-                                margin: EdgeInsets.only(top: 16.0),
-                                label: "Height",
-                                obscureText: false,
-                                inputType: TextInputType.number,
-                              ),
-                            ),
-                            widthSizedBox(width: 10.0),
-                            const Expanded(
-                              child: TextFormFieldContainer(
-                                margin: EdgeInsets.only(top: 16.0),
-                                label: "Weight",
-                                obscureText: false,
-                                inputType: TextInputType.number,
-                              ),
+                            Expanded(
+                              flex: 2,
+                              child: _weightTextField(),
                             ),
                           ],
                         ),
-                        const TextFormFieldContainer(
-                          margin: EdgeInsets.only(top: 16.0),
-                          label: "Batch (Optional)",
-                          obscureText: false,
-                          inputType: TextInputType.text,
-                        ),
+                        _batchTextField(),
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 20.0),
+                          padding: kTopPadding,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
-                                "Step 1 of 2",
+                              Text(
+                                kStepOne,
                                 style: kTextFormFieldTextStyle,
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const AddMemberPaymentScreen(),
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  height: 45.0,
-                                  width: 45.0,
-                                  color: kMainColor,
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: kWhiteColor,
-                                    ),
-                                  ),
-                                ),
-                              )
+                              _bottomNextButton(context)
                             ],
                           ),
                         ),
@@ -168,31 +135,143 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
     );
   }
 
-  Container backgroundContainer() => Container(
-        padding: const EdgeInsets.all(16.0),
-        height: 185,
-        color: kMainColor,
-        child: homeCustomAppBar(),
+  GestureDetector _bottomNextButton(BuildContext context) => GestureDetector(
+        onTap: () {
+          navigatePushNamedMethod(context, AddMemberPaymentScreen.id);
+        },
+        child: Container(
+          height: 45.0,
+          width: 45.0,
+          decoration: kCustomButtonBoxDecoration,
+          child: const Center(
+            child: Icon(
+              Icons.arrow_forward_ios,
+              color: kWhiteColor,
+            ),
+          ),
+        ),
       );
 
-  Row homeCustomAppBar() => Row(
+  TextFormFieldContainer _batchTextField() => TextFormFieldContainer(
+        label: kBatch,
+        inputType: TextInputType.text,
+        controller: _batchController,
+        focusNode: _batchFocusNode,
+        onSubmit: (String? value) {
+          onSubmittedUnFocusMethod(context, _batchFocusNode);
+        },
+      );
+
+  TextFormFieldContainer _weightTextField() => TextFormFieldContainer(
+        label: kWeight,
+        inputType: TextInputType.number,
+        controller: _weightController,
+        focusNode: _weightFocusNode,
+        onSubmit: (String? value) {
+          onSubmittedFocusMethod(context, _weightFocusNode, _batchFocusNode);
+        },
+      );
+
+  TextFormFieldContainer _heightTextField() => TextFormFieldContainer(
+        label: kHeight,
+        inputType: TextInputType.number,
+        controller: _heightController,
+        focusNode: _heightFocusNode,
+        onSubmit: (String? value) {
+          onSubmittedFocusMethod(context, _heightFocusNode, _weightFocusNode);
+        },
+      );
+
+  TextFormFieldContainer _dobTextField() => TextFormFieldContainer(
+      label: kDOB,
+      inputType: TextInputType.text,
+      controller: _dobController,
+      focusNode: _dobFocusNode,
+      onSubmit: (String? value) {
+        onSubmittedFocusMethod(context, _dobFocusNode, _heightFocusNode);
+      });
+
+  TextFormFieldContainer _addressTextField() => TextFormFieldContainer(
+        label: kAddress,
+        inputType: TextInputType.streetAddress,
+        controller: _addressController,
+        focusNode: _addressFocusNode,
+        onSubmit: (String? value) {
+          onSubmittedFocusMethod(context, _addressFocusNode, _dobFocusNode);
+        },
+      );
+
+  TextFormFieldContainer _mobileNumberTextField() => TextFormFieldContainer(
+        label: kMobileNumber,
+        inputType: TextInputType.phone,
+        controller: _phoneController,
+        focusNode: _phoneFocusNode,
+        onSubmit: (String? value) {
+          onSubmittedFocusMethod(context, _phoneFocusNode, _addressFocusNode);
+        },
+      );
+
+  TextFormFieldContainer _emailTextField() => TextFormFieldContainer(
+        label: kEmail,
+        inputType: TextInputType.emailAddress,
+        controller: _emailController,
+        focusNode: _emailFocusNode,
+        onSubmit: (String? value) {
+          onSubmittedFocusMethod(context, _emailFocusNode, _phoneFocusNode);
+        },
+      );
+
+  TextFormFieldContainer _lastNameTextField() => TextFormFieldContainer(
+        label: kLastName,
+        inputType: TextInputType.text,
+        controller: _lastNameController,
+        focusNode: _lastNameFocusNode,
+        onSubmit: (String? value) {
+          onSubmittedFocusMethod(context, _lastNameFocusNode, _emailFocusNode);
+        },
+      );
+
+  TextFormFieldContainer _firstNameTextField() => TextFormFieldContainer(
+        label: kFirstName,
+        inputType: TextInputType.text,
+        controller: _firstNameController,
+        focusNode: _firstNameFocusNode,
+        onSubmit: (String? value) {
+          onSubmittedFocusMethod(
+              context, _firstNameFocusNode, _lastNameFocusNode);
+        },
+      );
+
+  Container _backgroundContainer() => Container(
+        padding: kAllSideBigPadding,
+        height: 185,
+        color: kMainColor,
+        child: _homeCustomAppBar(),
+      );
+
+  Row _homeCustomAppBar() => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: const [
-              Icon(
-                Icons.arrow_back_ios,
-                color: kLightWhiteColor,
-              ),
-              Text(
-                "Add New Member",
-                style: kAppBarTextStyle,
-              ),
-            ],
+          GestureDetector(
+            onTap: () {
+              //navigatePushReplacementMethod(context, HomePage.id);
+            },
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.arrow_back_ios,
+                  color: kLightWhiteColor,
+                ),
+                Text(
+                  kAddNewMember,
+                  style: kAppBarTextStyle,
+                ),
+              ],
+            ),
           ),
-          const Text(
-            "Step 1 of 2",
+          Text(
+            kStepOne,
             style: kAppBarTextStyle,
           ),
         ],

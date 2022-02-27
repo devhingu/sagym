@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
 import 'package:gym/ui/auth/screens/login/sign_in_screen.dart';
-import 'package:gym/ui/welcome_screen/constants/welcome_constants.dart';
+import 'package:gym/ui/welcome/constants/welcome_constants.dart';
 import 'package:gym/widgets/custom_button.dart';
 import 'package:gym/widgets/dashboard/welcome_top_image_container.dart';
 import 'package:gym/widgets/reusable/reusable_methods.dart';
 
 class WelcomeScreen extends StatefulWidget {
-  static const String id = "welcome_screen";
+  static const String id = "welcome";
 
   const WelcomeScreen({Key? key}) : super(key: key);
 

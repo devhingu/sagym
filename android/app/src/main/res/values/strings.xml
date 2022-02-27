@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_name">sagym</string>
+    <string name="facebook_app_id">3183911268554934</string>
+    <string name="fb_login_protocol_scheme">fb3183911268554934</string>
+    <string name="facebook_client_token">507a5f4f494ec5ec393459dbb741aaff</string>
+</resources>

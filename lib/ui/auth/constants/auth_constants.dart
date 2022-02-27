@@ -40,7 +40,3 @@ const kBottomStartTextStyle = TextStyle(
 );
 
 //paddings
-const kAuthPadding = EdgeInsets.symmetric(
-  vertical: 16.0,
-  horizontal: 32.0,
-);

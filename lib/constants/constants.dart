@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'color_constants.dart';
 
@@ -7,8 +8,10 @@ const kAppTitleTextStyle = TextStyle(
   color: kBlackColor,
 );
 
-const kCustomButtonMargin = EdgeInsets.symmetric(
-  horizontal: 32.0,
+const kTextStyle = TextStyle(
+  fontSize: 16.0,
+  fontWeight: FontWeight.bold,
+  color: kBlackColor,
 );
 
 const kAuthButtonTextStyle = TextStyle(
@@ -32,6 +35,13 @@ const kTextFormFieldLabelTextStyle = TextStyle(
   color: kDarkGreyColor,
 );
 
+const kLabelTextStyle = TextStyle(
+  fontSize: 20.0,
+  fontWeight: FontWeight.bold,
+  color: kDarkGreyColor,
+  letterSpacing: 1.2
+);
+
 const kTextFormFieldTextStyle = TextStyle(
   fontSize: 16.0,
   color: kBlackColor,
@@ -39,10 +49,30 @@ const kTextFormFieldTextStyle = TextStyle(
 );
 
 //paddings
-// const kTopPadding = EdgeInsets.only(top: 40.0);
-// const kRightPadding = EdgeInsets.only(right: 32.0);
-// const kTopBottomPadding = EdgeInsets.only(top: 20.0, bottom: 8.0);
-// const kButtonPadding =  EdgeInsets.only(top: 15.0);
-const kDividerPadding = EdgeInsets.only(top: 16.0, left: 32.0, right: 32.0);
-// const kBigVerticalPadding = EdgeInsets.only(bottom: 40.0);
-// const kSmallVerticalPadding = EdgeInsets.only(bottom: 5.0);
+const kAllSideSmallPadding = EdgeInsets.all(8.0);
+const kAllSidePadding = EdgeInsets.all(16.0);
+const kAllSideBigPadding = EdgeInsets.all(20.0);
+const kHorizontalPadding = EdgeInsets.symmetric(horizontal: 32.0);
+const kTopSmallPadding = EdgeInsets.only(top: 16.0);
+const kTopPadding = EdgeInsets.only(top: 32.0);
+const kDividerPadding = EdgeInsets.only(top: 16.0, bottom: 8.0);
+
+//bottom nav items
+const kBottomNavItems = [
+  BottomNavigationBarItem(
+    icon: Icon(CupertinoIcons.home),
+    label: "Home",
+  ),
+  BottomNavigationBarItem(
+    icon: Icon(CupertinoIcons.person_2),
+    label: "Members",
+  ),
+  BottomNavigationBarItem(
+    icon: Icon(CupertinoIcons.location),
+    label: "Location",
+  ),
+  BottomNavigationBarItem(
+    icon: Icon(CupertinoIcons.profile_circled),
+    label: "Account",
+  ),
+];

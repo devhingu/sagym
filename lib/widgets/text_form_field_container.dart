@@ -1,29 +1,35 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
-import 'package:gym/ui/auth/constants/auth_constants.dart';
 
 class TextFormFieldContainer extends StatelessWidget {
   final String label;
-  final bool obscureText;
   final TextInputType inputType;
-  final EdgeInsetsGeometry margin;
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final Function(String? value) onSubmit;
 
   const TextFormFieldContainer({
     Key? key,
-    required this.label, required this.obscureText, required this.inputType, required this.margin,
+    required this.label,
+    required this.inputType,
+    required this.controller,
+    required this.focusNode,
+    required this.onSubmit,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 55.0,
-     margin:margin,
+      margin: const EdgeInsets.only(top: 20.0),
       child: TextFormField(
-        obscureText: obscureText,
+        onFieldSubmitted: onSubmit,
+        focusNode: focusNode,
+        controller: controller,
+        obscureText: label == "Password" ? true : false,
         style: kTextFormFieldTextStyle,
         decoration: InputDecoration(
+          contentPadding: const EdgeInsets.all(15.0),
           border: textFormFieldInputBorder(),
           labelText: label,
           labelStyle: kTextFormFieldLabelTextStyle,

@@ -3,7 +3,34 @@ import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
 
 //strings
-String kTotalMembers = "Total Members ";
+String kWelcome = "Welcome, ";
+String kTotalMembers = "Total Members";
+String kActive = "Active";
+String kInactive = "Inactive";
+String kReceived = "Received";
+String kDue = "Due";
+String kDueUsers = "Due Users";
+String kPaymentDetails = "Payment Details";
+String kPersonalDetails = "Personal Details";
+String kMembershipDetails = "Membership Details";
+String kAddNewMember = "Add New Member";
+String kAddMember = "Add Member";
+String kAddExpenses = "Add Expenses";
+String kStepOne = "Step 1 of 2";
+String kStepTwo = "Step 2 of 2";
+String kFirstName = "First Name";
+String kLastName = "Last Name";
+String kMobileNumber = "Mobile Number";
+String kAddress = "Address";
+String kDOB = "DOB";
+String kHeight = "Height";
+String kWeight = "Weight";
+String kBatch = "Batch (Optional)";
+String kStaffName = "Staff Name";
+String kPayment = "Payment";
+String kPaymentType = "Payment Type";
+String kAmount = "Amount";
+String kMembershipPlan = "Membership Plan";
 
 //icons
 const kEllipsisIcon = CupertinoIcons.ellipsis_vertical;

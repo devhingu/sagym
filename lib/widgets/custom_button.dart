@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
 
 class CustomButton extends StatelessWidget {
@@ -19,7 +18,7 @@ class CustomButton extends StatelessWidget {
       child: Container(
         height: 55.0,
         width: double.infinity,
-        margin: kCustomButtonMargin,
+        margin: const EdgeInsets.only(top: 16.0),
         decoration: kCustomButtonBoxDecoration,
         child: Center(
           child: Text(

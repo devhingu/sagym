@@ -1,12 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
-import 'package:gym/home_page.dart';
+import 'package:gym/service/firebase_service.dart';
+import 'package:gym/ui/dashboard/screens/home_page.dart';
 import 'package:gym/ui/auth/constants/auth_constants.dart';
 import 'package:gym/ui/auth/screens/login/sign_in_screen.dart';
-import 'package:gym/ui/dashboard/screens/home_screen.dart';
 import 'package:gym/widgets/auth/bottom_rich_text.dart';
-import 'package:gym/widgets/auth/auth_custom_button.dart';
 import 'package:gym/widgets/auth/social_media_button.dart';
 import 'package:gym/widgets/custom_button.dart';
 import 'package:gym/widgets/reusable/reusable_methods.dart';
@@ -14,6 +14,8 @@ import 'package:gym/widgets/text_form_field_container.dart';
 import 'package:gym/widgets/top_logo_title_widget.dart';
 
 class SignUpScreen extends StatefulWidget {
+  static const String id = "sign_up_screen";
+
   const SignUpScreen({Key? key}) : super(key: key);
 
   @override
@@ -21,68 +23,146 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final FocusNode _userNameFocusNode = FocusNode();
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+  final _fireStore = FirebaseFirestore.instance;
+  bool isUploaded = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+    _userNameFocusNode.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const TopLogoTitleWidget(),
-              heightSizedBox(height: 25.0),
-              TextFormFieldContainer(
-                label: kUsername,
-                obscureText: false,
-                inputType: TextInputType.text,
-                margin:  kAuthPadding,
-              ),
-              TextFormFieldContainer(
-                label: kEmail,
-                obscureText: false,
-                inputType: TextInputType.emailAddress,
-                margin:  kAuthPadding,
-              ),
-              TextFormFieldContainer(
-                label: kPassword,
-                obscureText: true,
-                inputType: TextInputType.visiblePassword,
-                margin:  kAuthPadding,
-              ),
-              heightSizedBox(height: 15.0),
-              CustomButton(
-                title: kSignUp,
-                onPress: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const HomeScreen(),
+          child: Padding(
+            padding: kHorizontalPadding,
+            child: SizedBox(
+              height: size.height,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const TopLogoTitleWidget(),
+                  _userNameTextField(context),
+                  _emailTextField(context),
+                  _passwordTextField(context),
+                  heightSizedBox(height: 15.0),
+                  _signUpButton(context),
+                  const Padding(
+                    padding: kDividerPadding,
+                    child: Divider(),
+                  ),
+                  const SocialMediaButton(),
+                  Padding(
+                    padding: kAllSideSmallPadding,
+                    child: BottomRichText(
+                      startText: kAlreadyHaveAnAccount,
+                      endText: kSignIn,
+                      onPress: () {
+                        navigatePushNamedMethod(context, SignInScreen.id);
+                      },
                     ),
-                  );
-                },
+                  ),
+                ],
               ),
-              const Padding(
-                padding: kDividerPadding,
-                child: Divider(),
-              ),
-              const SocialMediaButton(),
-              BottomRichText(
-                startText: kAlreadyHaveAnAccount,
-                endText: kSignIn,
-                onPress: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SignInScreen(),
-                    ),
-                  );
-                },
-              ),
-            ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  _signUpButton(BuildContext context) => CustomButton(
+        title: kSignUp,
+        onPress: () async {
+          FirebaseService firebaseService = FirebaseService();
+          await firebaseService.signUpWithEmailAndPassword(
+            email: _emailController.text,
+            password: _passwordController.text,
+          );
+          await _saveDetailsToFirebaseFirestore();
+          navigatePushReplacementMethod(context, HomePage.id);
+        },
+      );
+
+  TextFormFieldContainer _passwordTextField(BuildContext context) =>
+      TextFormFieldContainer(
+        label: kPassword,
+        inputType: TextInputType.visiblePassword,
+        controller: _passwordController,
+        focusNode: _passwordFocusNode,
+        onSubmit: (String? value) {
+          onSubmittedUnFocusMethod(context, _passwordFocusNode);
+        },
+      );
+
+  TextFormFieldContainer _emailTextField(BuildContext context) =>
+      TextFormFieldContainer(
+        label: kEmail,
+        inputType: TextInputType.emailAddress,
+        controller: _emailController,
+        focusNode: _emailFocusNode,
+        onSubmit: (String? value) {
+          onSubmittedFocusMethod(
+            context,
+            _emailFocusNode,
+            _passwordFocusNode,
+          );
+        },
+      );
+
+  TextFormFieldContainer _userNameTextField(BuildContext context) =>
+      TextFormFieldContainer(
+        label: kUsername,
+        inputType: TextInputType.text,
+        controller: _userNameController,
+        focusNode: _userNameFocusNode,
+        onSubmit: (String? value) {
+          onSubmittedFocusMethod(
+            context,
+            _userNameFocusNode,
+            _emailFocusNode,
+          );
+        },
+      );
+
+  _saveDetailsToFirebaseFirestore() async {
+    final kCurrentUser = FirebaseAuth.instance.currentUser;
+    var emailValid = RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+
+    if (_userNameController.text.trim().isNotEmpty &&
+        _passwordController.text.trim().isNotEmpty &&
+        _emailController.text.trim().isNotEmpty &&
+        emailValid.hasMatch(_emailController.text)) {
+
+      await _fireStore
+          .collection("Trainers")
+          .doc(kCurrentUser?.email)
+          .collection("trainerDetails")
+          .add({
+        'userName': _userNameController.text,
+        'email': _emailController.text,
+        'password': _passwordController.text,
+      });
+    } else {
+      debugPrint("failed");
+    }
+
+    _userNameController.clear();
+    _emailController.clear();
+    _passwordController.clear();
   }
 }
