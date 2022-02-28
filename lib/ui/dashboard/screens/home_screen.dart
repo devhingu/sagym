@@ -1,15 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
-import 'package:gym/ui/dashboard/screens/add_member_screen.dart';
 import 'package:gym/widgets/dashboard/custom_card.dart';
 import 'package:gym/widgets/dashboard/custom_data_column.dart';
-import 'package:gym/widgets/reusable/reusable_methods.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = "home_screen";
@@ -24,21 +20,21 @@ class _HomeScreenState extends State<HomeScreen> {
   final _fireStore = FirebaseFirestore.instance;
   final user = FirebaseAuth.instance.currentUser;
   String userName = "";
+  String imagePath = "";
 
   Future getCurrentUser() async {
     if (user?.displayName == null || user?.displayName == "") {
-      final snapshots = await _fireStore
-          .collection("Trainers")
-          .doc(user?.email)
-          .collection("trainerDetails")
-          .get();
+      final snapshots =
+          await _fireStore.collection("Trainers").doc(user?.email).get();
       setState(() {
-        userName = snapshots.docs.first.get("userName");
+        userName = snapshots.get("userName");
+        imagePath = "";
       });
     } else {
       try {
         if (user != null) {
           userName = user!.displayName!;
+          imagePath = user!.photoURL!;
         }
       } catch (e) {
         print(e);
@@ -181,9 +177,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            const CircleAvatar(
-              backgroundImage: AssetImage(kAvatarImagePath),
-            )
+            imagePath.isEmpty
+                ? const CircleAvatar(
+                    backgroundImage: AssetImage(kAvatarImagePath),
+                  )
+                : CircleAvatar(
+                    backgroundImage: NetworkImage(imagePath),
+                  )
           ],
         ),
       );

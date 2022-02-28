@@ -25,11 +25,12 @@ String kAddress = "Address";
 String kDOB = "DOB";
 String kHeight = "Height";
 String kWeight = "Weight";
-String kBatch = "Batch (Optional)";
+String kBatch = "Batch";
 String kStaffName = "Staff Name";
 String kPayment = "Payment";
 String kPaymentType = "Payment Type";
 String kAmount = "Amount";
+String kDueAmount = "Due amount";
 String kMembershipPlan = "Membership Plan";
 
 //icons

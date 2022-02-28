@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'color_constants.dart';
 
 const kAppTitleTextStyle = TextStyle(
@@ -36,11 +35,10 @@ const kTextFormFieldLabelTextStyle = TextStyle(
 );
 
 const kLabelTextStyle = TextStyle(
-  fontSize: 20.0,
-  fontWeight: FontWeight.bold,
-  color: kDarkGreyColor,
-  letterSpacing: 1.2
-);
+    fontSize: 20.0,
+    fontWeight: FontWeight.bold,
+    color: kDarkGreyColor,
+    letterSpacing: 1.2);
 
 const kTextFormFieldTextStyle = TextStyle(
   fontSize: 16.0,
@@ -50,11 +48,14 @@ const kTextFormFieldTextStyle = TextStyle(
 
 //paddings
 const kAllSideSmallPadding = EdgeInsets.all(8.0);
+const kAllSideVerySmallPadding = EdgeInsets.all(4.0);
 const kAllSidePadding = EdgeInsets.all(16.0);
 const kAllSideBigPadding = EdgeInsets.all(20.0);
 const kHorizontalPadding = EdgeInsets.symmetric(horizontal: 32.0);
+const kSmallHorizontalPadding = EdgeInsets.symmetric(vertical: 4.0);
 const kTopSmallPadding = EdgeInsets.only(top: 16.0);
 const kTopPadding = EdgeInsets.only(top: 32.0);
+const kTBottomPadding = EdgeInsets.only(bottom: 16.0);
 const kDividerPadding = EdgeInsets.only(top: 16.0, bottom: 8.0);
 
 //bottom nav items

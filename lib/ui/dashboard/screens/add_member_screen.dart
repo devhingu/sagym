@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
@@ -37,6 +39,23 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
   final FocusNode _heightFocusNode = FocusNode();
   final FocusNode _weightFocusNode = FocusNode();
   final FocusNode _batchFocusNode = FocusNode();
+
+  DateTime selectedDate = DateTime.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(1901, 1),
+        lastDate: DateTime(2100));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        _dobController.value = TextEditingValue(
+            text: "${picked.day}-${picked.month}-${picked.year}");
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -136,8 +155,15 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
   }
 
   GestureDetector _bottomNextButton(BuildContext context) => GestureDetector(
-        onTap: () {
-          navigatePushNamedMethod(context, AddMemberPaymentScreen.id);
+        onTap: () async {
+          await _saveMemberDetailsToFirestore();
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  AddMemberPaymentScreen(email: _emailController.text),
+            ),
+          );
         },
         child: Container(
           height: 45.0,
@@ -182,14 +208,27 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
         },
       );
 
-  TextFormFieldContainer _dobTextField() => TextFormFieldContainer(
-      label: kDOB,
-      inputType: TextInputType.text,
-      controller: _dobController,
-      focusNode: _dobFocusNode,
-      onSubmit: (String? value) {
-        onSubmittedFocusMethod(context, _dobFocusNode, _heightFocusNode);
-      });
+  GestureDetector _dobTextField() => GestureDetector(
+        onTap: () => _selectDate(context),
+        child: AbsorbPointer(
+          child: TextFormFieldContainer(
+              label: kDOB,
+              inputType: TextInputType.text,
+              controller: _dobController,
+              focusNode: _dobFocusNode,
+              onSubmit: (String? value) async {
+                await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(2019, 1),
+                  lastDate: DateTime(2021, 12),
+                ).then((pickedDate) {
+                  //do whatever you want
+                });
+
+              }),
+        ),
+      );
 
   TextFormFieldContainer _addressTextField() => TextFormFieldContainer(
         label: kAddress,
@@ -197,7 +236,7 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
         controller: _addressController,
         focusNode: _addressFocusNode,
         onSubmit: (String? value) {
-          onSubmittedFocusMethod(context, _addressFocusNode, _dobFocusNode);
+          onSubmittedFocusMethod(context, _addressFocusNode, _heightFocusNode);
         },
       );
 
@@ -255,7 +294,7 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
         children: [
           GestureDetector(
             onTap: () {
-              //navigatePushReplacementMethod(context, HomePage.id);
+              Navigator.pop(context);
             },
             child: Row(
               children: [
@@ -276,4 +315,47 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
           ),
         ],
       );
+
+  _saveMemberDetailsToFirestore() async {
+    final kCurrentUser = FirebaseAuth.instance.currentUser;
+    final _fireStore = FirebaseFirestore.instance;
+
+    if (_firstNameController.text.trim().isNotEmpty &&
+        _lastNameController.text.trim().isNotEmpty &&
+        _emailController.text.trim().isNotEmpty &&
+        _phoneController.text.trim().isNotEmpty &&
+        _addressController.text.trim().isNotEmpty &&
+        _dobController.text.trim().isNotEmpty &&
+        _heightController.text.trim().isNotEmpty &&
+        _weightController.text.trim().isNotEmpty &&
+        _batchController.text.trim().isNotEmpty) {
+
+      await _fireStore
+          .collection("Trainers")
+          .doc(kCurrentUser?.email)
+          .collection("memberDetails")
+          .doc(_emailController.text)
+          .set({
+        'firstName': _firstNameController.text,
+        'lastName': _lastNameController.text,
+        'email': _emailController.text,
+        'phone': _phoneController.text,
+        'address': _addressController.text,
+        'dob': _dobController.text,
+        'height': "${_heightController.text}cm",
+        'weight': "${_weightController.text}kg",
+        'batch': _batchController.text,
+      });
+    } else {
+      debugPrint("failed");
+    }
+    _firstNameController.clear();
+    _lastNameController.clear();
+    _phoneController.clear();
+    _addressController.clear();
+    _dobController.clear();
+    _heightController.clear();
+    _weightController.clear();
+    _batchController.clear();
+  }
 }

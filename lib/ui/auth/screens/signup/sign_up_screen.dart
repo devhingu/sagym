@@ -71,7 +71,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       startText: kAlreadyHaveAnAccount,
                       endText: kSignIn,
                       onPress: () {
-                        navigatePushNamedMethod(context, SignInScreen.id);
+                        navigatePushReplacementMethod(context, SignInScreen.id);
                       },
                     ),
                   ),
@@ -148,11 +148,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _emailController.text.trim().isNotEmpty &&
         emailValid.hasMatch(_emailController.text)) {
 
-      await _fireStore
-          .collection("Trainers")
-          .doc(kCurrentUser?.email)
-          .collection("trainerDetails")
-          .add({
+      await _fireStore.collection("Trainers").doc(kCurrentUser?.email).set({
         'userName': _userNameController.text,
         'email': _emailController.text,
         'password': _passwordController.text,

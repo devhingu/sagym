@@ -12,3 +12,6 @@ const kButtonColor = Color(0xFF217AEC);
 
 const kDueTimeColor = Color(0xFFF93545);
 const kFloatingActionButtonColor = Color(0xFFF8AD3F);
+
+const kRedColor = Colors.red;
+const kGreenColor = Colors.green;

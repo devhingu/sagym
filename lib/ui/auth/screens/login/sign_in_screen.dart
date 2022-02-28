@@ -67,12 +67,8 @@ class _SignInScreenState extends State<SignInScreen> {
                       startText: kDoNotHaveAnAccount,
                       endText: kSignUp,
                       onPress: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SignUpScreen(),
-                          ),
-                        );
+                        navigatePushReplacementMethod(
+                            context, SignUpScreen.id);
                       },
                     ),
                   ),

@@ -75,18 +75,10 @@ class FirebaseService {
         break;
     }
   }
-
-  Future<void> signOutFromGoogle() async {
+  Future<void> signOutFromFirebase() async {
     await _googleSignIn.signOut();
     await _auth.signOut();
-  }
-
-  Future<void> signOutFromEmailAndPassword() async {
-    await _auth.signOut();
-  }
-
-  Future<void> signOutFromFacebook() async {
     await fb.logOut();
-    await _auth.signOut();
   }
+
 }

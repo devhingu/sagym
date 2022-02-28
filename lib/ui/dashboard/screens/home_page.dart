@@ -6,6 +6,8 @@ import 'package:gym/ui/dashboard/screens/bottom_sheet_screen.dart';
 import 'package:gym/ui/dashboard/screens/home_screen.dart';
 import 'package:gym/ui/member/screens/member_list.dart';
 
+import '../../location/screens/location_screen.dart';
+
 class HomePage extends StatefulWidget {
   static const String id = "home_page";
 
@@ -27,7 +29,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _children = [
     const HomeScreen(),
     const MemberListScreen(),
-    const HomeScreen(),
+    const LocationScreen(),
     const UserProfileScreen(),
   ];
 
