@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
-import 'package:gym/ui/dashboard/screens/add_member_screen.dart';
+import 'package:gym/ui/dashboard/screens/addmember/add_member_screen.dart';
 import 'package:gym/ui/dashboard/screens/home_page.dart';
 import 'package:gym/ui/member/screens/member_list.dart';
 import 'package:gym/widgets/reusable/reusable_methods.dart';
@@ -14,7 +14,8 @@ class AddMemberPaymentScreen extends StatefulWidget {
   final String email;
   static const String id = "add_member_payment_screen";
 
-  const AddMemberPaymentScreen({Key? key, required this.email}) : super(key: key);
+  const AddMemberPaymentScreen({Key? key, required this.email})
+      : super(key: key);
 
   @override
   _AddMemberPaymentScreenState createState() => _AddMemberPaymentScreenState();
@@ -85,27 +86,38 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
               _backgroundContainer(),
               Container(
                 padding: kAllSideBigPadding,
-                margin: const EdgeInsets.only(
-                  top: 50.0,
+                margin: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.07,
                 ),
                 child: Container(
+                  height: MediaQuery.of(context).size.height * 0.85,
                   decoration: kCardBoxDecoration,
                   child: Padding(
                     padding: kAllSidePadding,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           kMembershipDetails,
                           style: kTextFormFieldTextStyle,
                         ),
-                        _membershipPlanTextField(),
-                        _amountTextField(),
-                        _paymentTypeTextField(),
-                        _paymentTextField(),
-                        _staffNameTextField(),
-                        heightSizedBox(height: 71.0),
-                        _bottomPreviousButton(context),
+                        Expanded(child: _membershipPlanTextField()),
+                        Expanded(
+                          child: _amountTextField(),
+                        ),
+                        Expanded(
+                          child: _paymentTypeTextField(),
+                        ),
+                        Expanded(
+                          child: _paymentTextField(),
+                        ),
+                        Expanded(
+                          child: _staffNameTextField(),
+                        ),
+                        // heightSizedBox(height: MediaQuery.of(context).size.height * 0.15),
+                        Expanded(
+                          child: _bottomPreviousButton(context),
+                        ),
                       ],
                     ),
                   ),
@@ -132,8 +144,8 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
                 navigatePushReplacementMethod(context, AddMemberScreen.id);
               },
               child: Container(
-                height: 45.0,
-                width: 45.0,
+                height: 35.0,
+                width: 35.0,
                 decoration: kCustomButtonBoxDecoration,
                 child: const Center(
                   child: Icon(
@@ -143,24 +155,18 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
                 ),
               ),
             ),
-            GestureDetector(
-              onTap: () async{
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(kFloatingActionButtonColor),
+              ),
+              onPressed: () async {
                 await _saveMemberDetailsToFirestore();
                 Navigator.pop(context);
               },
-              child: Container(
-                height: 45.0,
-                width: 140.0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5.0),
-                  color: kFloatingActionButtonColor,
-                ),
-                child: Center(
-                  child: Text(
-                    kAddMember,
-                    style: kCustomButtonTextStyle,
-                  ),
-                ),
+              child: Text(
+                kAddMember,
+                style: kCustomButtonTextStyle,
               ),
             ),
           ],
@@ -222,7 +228,7 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
 
   Container _backgroundContainer() => Container(
         padding: kAllSideBigPadding,
-        height: 185,
+        height: MediaQuery.of(context).size.height * 0.2,
         color: kMainColor,
         child: _homeCustomAppBar(),
       );
@@ -256,11 +262,10 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
       );
 
   _saveMemberDetailsToFirestore() async {
-
     if (_memberShipPlanController.text.trim().isNotEmpty &&
         _amountController.text.trim().isNotEmpty &&
         _paymentController.text.trim().isNotEmpty &&
-        _paymentTypeController.text.trim().isNotEmpty ) {
+        _paymentTypeController.text.trim().isNotEmpty) {
       await _fireStore
           .collection("Trainers")
           .doc(kCurrentUser?.email)
@@ -271,7 +276,7 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
         'amount': _amountController.text,
         'paymentType': _paymentTypeController.text,
         'paymentStatus': _paymentController.text,
-        'staffName':  _staffNameController.text,
+        'staffName': _staffNameController.text,
       });
     } else {
       debugPrint("failed");
@@ -281,5 +286,4 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
     _paymentController.clear();
     _paymentTypeController.clear();
   }
-
 }

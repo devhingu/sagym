@@ -32,13 +32,6 @@ const kPhoneIcon = Icons.phone;
 const kMailIcon = Icons.mail;
 
 //box decoration
-BoxDecoration kBackgroundDecoration = BoxDecoration(
-  image: DecorationImage(
-    image: AssetImage(kBgImagePath),
-    fit: BoxFit.cover,
-  ),
-);
-
 BoxDecoration kMemberDetailBoxDecoration = BoxDecoration(
   borderRadius: const BorderRadius.only(
     topRight: Radius.circular(25.0),
@@ -46,9 +39,9 @@ BoxDecoration kMemberDetailBoxDecoration = BoxDecoration(
   ),
   boxShadow: [
     BoxShadow(
-      color: kBlackColor.withOpacity(0.5),
-      offset: const Offset(0, -15),
-      blurRadius: 15.0,
+      color: kWhiteColor.withOpacity(0.2),
+      offset: const Offset(0, -6),
+      blurRadius: 8.0,
     ),
   ],
   color: Colors.white,

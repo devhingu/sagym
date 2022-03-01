@@ -5,7 +5,7 @@ import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
 import 'package:gym/ui/auth/constants/auth_constants.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
-import 'package:gym/ui/dashboard/screens/add_member_payment_screen.dart';
+import 'package:gym/ui/dashboard/screens/addmember/add_member_payment_screen.dart';
 import 'package:gym/ui/dashboard/screens/home_page.dart';
 import 'package:gym/ui/dashboard/screens/home_screen.dart';
 import 'package:gym/widgets/reusable/reusable_methods.dart';
@@ -82,64 +82,73 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
               _backgroundContainer(),
               Container(
                 padding: kAllSideBigPadding,
-                margin: const EdgeInsets.only(
-                  top: 50.0,
+                margin: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.07,
                 ),
                 child: Container(
+                  height: MediaQuery.of(context).size.height * 0.85,
                   decoration: kCardBoxDecoration,
                   child: Padding(
                     padding: kAllSidePadding,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           kPersonalDetails,
                           style: kTextFormFieldTextStyle,
                         ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _firstNameTextField(),
-                            ),
-                            widthSizedBox(width: 10.0),
-                            Expanded(
-                              child: _lastNameTextField(),
-                            ),
-                          ],
-                        ),
-                        _emailTextField(),
-                        _mobileNumberTextField(),
-                        _addressTextField(),
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 3,
-                              child: _dobTextField(),
-                            ),
-                            widthSizedBox(width: 10.0),
-                            Expanded(
-                              flex: 2,
-                              child: _heightTextField(),
-                            ),
-                            widthSizedBox(width: 10.0),
-                            Expanded(
-                              flex: 2,
-                              child: _weightTextField(),
-                            ),
-                          ],
-                        ),
-                        _batchTextField(),
-                        Padding(
-                          padding: kTopPadding,
+                        Expanded(
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                kStepOne,
-                                style: kTextFormFieldTextStyle,
+                              Expanded(
+                                child: _firstNameTextField(),
                               ),
-                              _bottomNextButton(context)
+                              widthSizedBox(width: 10.0),
+                              Expanded(
+                                child: _lastNameTextField(),
+                              ),
                             ],
+                          ),
+                        ),
+                        Expanded(child: _emailTextField()),
+                        Expanded(child: _mobileNumberTextField()),
+                        Expanded(child: _addressTextField()),
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: _dobTextField(),
+                              ),
+                              widthSizedBox(width: 10.0),
+                              Expanded(
+                                flex: 2,
+                                child: _heightTextField(),
+                              ),
+                              widthSizedBox(width: 10.0),
+                              Expanded(
+                                flex: 2,
+                                child: _weightTextField(),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(child: _batchTextField()),
+                        // heightSizedBox(
+                        //     height: MediaQuery.of(context).size.height * 0.08),
+                        Expanded(
+                          child: Padding(
+                            padding: kTopPadding,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  kStepOne,
+                                  style: kTextFormFieldTextStyle,
+                                ),
+                                _bottomNextButton(context)
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -225,7 +234,6 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                 ).then((pickedDate) {
                   //do whatever you want
                 });
-
               }),
         ),
       );
@@ -283,7 +291,7 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
 
   Container _backgroundContainer() => Container(
         padding: kAllSideBigPadding,
-        height: 185,
+        height: MediaQuery.of(context).size.height * 0.2,
         color: kMainColor,
         child: _homeCustomAppBar(),
       );
@@ -329,7 +337,6 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
         _heightController.text.trim().isNotEmpty &&
         _weightController.text.trim().isNotEmpty &&
         _batchController.text.trim().isNotEmpty) {
-
       await _fireStore
           .collection("Trainers")
           .doc(kCurrentUser?.email)

@@ -20,6 +20,7 @@ class MemberListScreen extends StatefulWidget {
 class _MemberListScreenState extends State<MemberListScreen> {
   final kCurrentUser = FirebaseAuth.instance.currentUser;
   final _fireStore = FirebaseFirestore.instance;
+  String userName = "";
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +72,8 @@ class _MemberListScreenState extends State<MemberListScreen> {
               itemCount: snapshot.data?.docs.length,
               itemBuilder: (ctx, index) {
                 final doc = snapshot.data?.docs[index];
-                return _memberListTile(doc!, context);
+                userName = "${doc![paramsFirstName]} ${doc[paramsLastName]}";
+                return _memberListTile(doc, context);
               },
             ),
           );
@@ -110,7 +112,11 @@ class _MemberListScreenState extends State<MemberListScreen> {
       );
 
   TextFormField _searchField() => TextFormField(
-        onChanged: (value) {},
+        onChanged: (value) {
+          if(value == userName){
+            print(userName);
+          }
+        },
         decoration: InputDecoration(
           contentPadding: kAllSidePadding,
           border: const OutlineInputBorder(),

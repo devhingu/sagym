@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
           imagePath = user!.photoURL!;
         }
       } catch (e) {
-        print(e);
+        debugPrint(e.toString());
       }
     }
   }
@@ -62,9 +62,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 _backgroundContainer(),
                 Container(
                   padding: const EdgeInsets.all(16.0),
-                  margin: const EdgeInsets.only(
-                    top: 185,
-                  ),
+                  width: double.infinity,
+                  margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.25),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -130,21 +129,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Container _backgroundContainer() => Container(
         padding: const EdgeInsets.all(16.0),
-        height: 250,
+        height: MediaQuery.of(context).size.height * 0.32,
         color: kMainColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _homeCustomAppBar(),
-            _totalMembersWidget(),
-            const Text(
-              "1270",
-              style: kMemberCountTextStyle,
+            Expanded(child: _homeCustomAppBar()),
+            Expanded(child: _totalMembersWidget()),
+            Expanded(
+              child: const Text(
+                "1270",
+                style: kMemberCountTextStyle,
+              ),
             ),
-            const Text(
-              "WED, April 03, 2019",
-              style: kDateTextStyle,
+            Expanded(
+              child: const Text(
+                "WED, April 03, 2019",
+                style: kDateTextStyle,
+              ),
             ),
           ],
         ),

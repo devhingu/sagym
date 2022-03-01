@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/service/firebase_service.dart';
 import 'package:gym/ui/auth/screens/login/sign_in_screen.dart';
@@ -23,6 +24,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   String userName = "";
   String email = "";
   String imagePath = "";
+  final fb = FacebookLogin();
 
   Future getCurrentUser() async {
     if (user?.displayName == null || user?.displayName == "") {
@@ -39,6 +41,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           userName = user!.displayName!;
           email = user!.email!;
           imagePath = user!.photoURL!;
+          print(fb.getProfileImageUrl.toString());
         }
       } catch (e) {
         debugPrint(e.toString());
@@ -147,13 +150,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         backgroundImage: AssetImage(kAvatarImagePath),
       );
 
-  SizedBox _emailText() => SizedBox(
-        width: 220.0,
-        child: Text(
-          email,
-          style: kUserEmailTextStyle,
-        ),
-      );
+  Text _emailText() => Text(
+    email,
+    style: kUserEmailTextStyle,
+  );
 
   SizedBox _userNameText() => SizedBox(
         width: 220.0,
@@ -163,4 +163,3 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ),
       );
 }
-

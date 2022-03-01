@@ -29,7 +29,7 @@ class TextFormFieldContainer extends StatelessWidget {
         obscureText: label == "Password" ? true : false,
         style: kTextFormFieldTextStyle,
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.all(15.0),
+          contentPadding: const EdgeInsets.all(10.0),
           border: textFormFieldInputBorder(),
           labelText: label,
           labelStyle: kTextFormFieldLabelTextStyle,

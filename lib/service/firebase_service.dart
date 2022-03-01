@@ -54,7 +54,6 @@ class FirebaseService {
 
     switch (res.status) {
       case FacebookLoginStatus.success:
-
         final FacebookAccessToken? accessToken = res.accessToken;
         final AuthCredential authCredential =
             FacebookAuthProvider.credential(accessToken!.token);
@@ -62,23 +61,25 @@ class FirebaseService {
             await FirebaseAuth.instance.signInWithCredential(authCredential);
 
         final profile = await fb.getUserProfile();
-        print('Hello, ${profile!.name}! You ID: ${profile.userId}');
+        debugPrint('Hello, ${profile!.name}! You ID: ${profile.userId}');
         final imageUrl = await fb.getProfileImageUrl(width: 100);
-        print('Your profile image: $imageUrl');
+        debugPrint('Your profile image: $imageUrl');
         final email = await fb.getUserEmail();
-        if (email != null) print('And your email is $email');
+        if (email != null) {
+          debugPrint('And your email is $email');
+        }
         break;
       case FacebookLoginStatus.cancel:
         break;
       case FacebookLoginStatus.error:
-        print('Error while log in: ${res.error}');
+        debugPrint('Error while log in: ${res.error}');
         break;
     }
   }
+
   Future<void> signOutFromFirebase() async {
     await _googleSignIn.signOut();
     await _auth.signOut();
     await fb.logOut();
   }
-
 }

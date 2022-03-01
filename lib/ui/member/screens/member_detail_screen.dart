@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
+import 'package:gym/ui/auth/constants/auth_constants.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
 import 'package:gym/ui/member/constants/member_constants.dart';
 import 'package:gym/widgets/reusable/reusable_methods.dart';
@@ -29,7 +30,9 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
                 decoration: kMemberDetailBoxDecoration,
                 padding: kAllSideBigPadding,
                 width: double.infinity,
-                margin: const EdgeInsets.only(top: 180),
+                height: MediaQuery.of(context).size.height,
+                margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.25),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -82,7 +85,6 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
                       ],
                     ),
                     _divider(),
-
                   ],
                 ),
               ),
@@ -106,7 +108,10 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
                     "${widget.doc[paramsFirstName]} ${widget.doc[paramsLastName]}",
                     style: kMemberDetailNameTextStyle,
                   ),
-                  const Icon(kActiveCircleIcon, color: kGreenColor,)
+                  const Icon(
+                    kActiveCircleIcon,
+                    color: kGreenColor,
+                  )
                 ],
               ),
               _userDataRow(icon: kMailIcon, title: widget.doc[paramsEmail]),
@@ -143,7 +148,23 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
       );
 
   Container _backgroundContainer() => Container(
-        height: 300.0,
-        decoration: kBackgroundDecoration,
+        height: MediaQuery.of(context).size.height * 0.36,
+        width: double.infinity,
+        padding: const EdgeInsets.only(bottom: 120.0),
+        color: kMainColor,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              kDumbbellImagePath,
+              height:MediaQuery.of(context).size.height * 0.1,
+              color: kWhiteColor,
+            ),
+            Text(
+              "Body Fit Gym",
+              style: kAppTitleTextStyle.copyWith(color: kWhiteColor),
+            )
+          ],
+        ),
       );
 }
