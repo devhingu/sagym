@@ -23,7 +23,8 @@ String paramsPayment = "paymentStatus";
 String paramsPaymentType = "paymentType";
 String paramsAmount = "amount";
 String paramsStaffName = "staffName";
-String paramsUserName= "UserName";
+String paramsUserName = "userName";
+String paramsStatus = "status";
 
 //icons
 const kActiveCircleIcon = Icons.album_outlined;
@@ -56,7 +57,7 @@ const kMemberTileNameTextStyle = TextStyle(
 
 const kMemberDetailNameTextStyle = TextStyle(
   color: kBlackColor,
-  fontSize: 35.0,
+  fontSize: 30.0,
   fontWeight: FontWeight.bold,
 );
 

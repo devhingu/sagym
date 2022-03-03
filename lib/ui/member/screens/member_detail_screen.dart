@@ -30,7 +30,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
                 decoration: kMemberDetailBoxDecoration,
                 padding: kAllSideBigPadding,
                 width: double.infinity,
-                height: MediaQuery.of(context).size.height,
+                // height: MediaQuery.of(context).size.height,
                 margin: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.25),
                 child: Column(
@@ -76,7 +76,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
                       children: [
                         MemberDetailData(
                           title: kAmount,
-                          titleValue: widget.doc[paramsAmount],
+                          titleValue: widget.doc["receivedAmount"],
                         ),
                         MemberDetailData(
                           title: kPaymentType,
@@ -104,13 +104,19 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
             children: [
               Row(
                 children: [
-                  Text(
-                    "${widget.doc[paramsFirstName]} ${widget.doc[paramsLastName]}",
-                    style: kMemberDetailNameTextStyle,
+                  FittedBox(
+                    child: Text(
+                      "${widget.doc[paramsFirstName]} ${widget.doc[paramsLastName]}",
+                      style: kMemberDetailNameTextStyle,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                  const Icon(
+                  widthSizedBox(width: 5.0),
+                  Icon(
                     kActiveCircleIcon,
-                    color: kGreenColor,
+                    color: widget.doc[paramsStatus] == true
+                        ? kGreenColor
+                        : kRedColor,
                   )
                 ],
               ),
@@ -157,7 +163,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
           children: [
             Image.asset(
               kDumbbellImagePath,
-              height:MediaQuery.of(context).size.height * 0.1,
+              height: MediaQuery.of(context).size.height * 0.1,
               color: kWhiteColor,
             ),
             Text(

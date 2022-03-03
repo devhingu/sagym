@@ -15,7 +15,7 @@ String kPersonalDetails = "Personal Details";
 String kMembershipDetails = "Membership Details";
 String kAddNewMember = "Add New Member";
 String kAddMember = "Add Member";
-String kAddExpenses = "Add Expenses";
+String kAddExpense = "Add Expenses";
 String kStepOne = "Step 1 of 2";
 String kStepTwo = "Step 2 of 2";
 String kFirstName = "First Name";
@@ -32,6 +32,19 @@ String kPaymentType = "Payment Type";
 String kAmount = "Amount";
 String kDueAmount = "Due amount";
 String kMembershipPlan = "Membership Plan";
+String kAccessoriesName = "Accessories Name";
+String kAccessoriesType = "Accessories Type";
+String kExpense = "Expense";
+String kAddedBy = "Added By";
+String kSendReminder = "Send Reminder";
+
+//params
+String paramsAccessoriesName = "accessoriesName";
+String paramsAccessoriesType = "accessoriesType";
+String paramsAccessoriesExpense = "accessoriesExpense";
+String paramsAddedBy = "addedBy";
+String paramsUserUid = "userUid";
+String paramsUserProfileImage= "userProfileImage";
 
 //icons
 const kEllipsisIcon = CupertinoIcons.ellipsis_vertical;
@@ -79,3 +92,23 @@ BoxDecoration kCardBoxDecoration = BoxDecoration(
     )
   ],
 );
+
+//batch list
+final batchList = ["Morning", "Evening"];
+//membership plan list
+final memberShipPlanList = ["3 Months", "6 Months", "9 Months", "1 Year"];
+
+//payment type list
+final paymentTypeList = ["Cash", "Paytm", "G Pay", "Phonepe"];
+
+//payment status
+final paymentStatusList = ["Success", "Pending"];
+
+//gym accessories type list
+final accessoriesTypeList = [
+  "Dumbbells",
+  "Punching bag",
+  "Exercise ball",
+  "A pull-up bar",
+  "An ab wheel"
+];

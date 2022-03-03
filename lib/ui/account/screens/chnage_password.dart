@@ -2,39 +2,44 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gym/constants/constants.dart';
+import 'package:gym/service/firebase_service.dart';
 import 'package:gym/ui/auth/constants/auth_constants.dart';
+import 'package:gym/ui/auth/screens/login/sign_in_screen.dart';
 import 'package:gym/widgets/custom_button.dart';
 import 'package:gym/widgets/text_form_field_container.dart';
 import 'package:gym/widgets/top_logo_title_widget.dart';
 
 import '../../../../widgets/reusable/reusable_methods.dart';
 
-class ForgotPasswordScreen extends StatefulWidget {
-  static const String id = "forgot_password_screen";
+class ChangePasswordScreen extends StatefulWidget {
+  static const String id = "change_password_screen";
 
-  const ForgotPasswordScreen({Key? key}) : super(key: key);
+  const ChangePasswordScreen({Key? key}) : super(key: key);
 
   @override
-  _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
+  _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final FocusNode _emailFocusNode = FocusNode();
+class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
+  final TextEditingController _passwordController = TextEditingController();
+  final FocusNode _passwordFocusNode = FocusNode();
 
   @override
   void dispose() {
     super.dispose();
-    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Change Password"),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: SizedBox(
-            height: MediaQuery.of(context).size.height,
+            height: MediaQuery.of(context).size.height * 0.8,
             child: Padding(
               padding: kHorizontalPadding,
               child: Column(
@@ -42,15 +47,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const TopLogoTitleWidget(),
-                  Padding(
+                  const Padding(
                     padding: kAllSideSmallPadding,
                     child: Text(
-                      kForgotPassword,
+                      "Change Password",
                       style: kForgotPasswordTextStyle,
                     ),
-                  ),
-                  Text(
-                    kSendEmailForForgotPassword,
                   ),
                   _emailTextField(context),
                   _submitButton(),
@@ -65,23 +67,25 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   CustomButton _submitButton() => CustomButton(
         title: kSubmit,
-        onPress: () async{
-          await
-          FirebaseAuth.instance.sendPasswordResetEmail(email: _emailController.text.trim());
-          debugPrint("done");
+        onPress: () async {
+          final user = FirebaseAuth.instance.currentUser;
+          await user?.updatePassword(_passwordController.text.toString());
+          FirebaseService firebaseService = FirebaseService();
+          await firebaseService.signOutFromFirebase();
+          navigatePushReplacementMethod(context, SignInScreen.id);
         },
       );
 
   TextFormFieldContainer _emailTextField(BuildContext context) =>
       TextFormFieldContainer(
-        label: kEmail,
+        label: "Change Password",
         inputType: TextInputType.emailAddress,
-        controller: _emailController,
-        focusNode: _emailFocusNode,
+        controller: _passwordController,
+        focusNode: _passwordFocusNode,
         onSubmit: (String? value) {
           onSubmittedUnFocusMethod(
             context,
-            _emailFocusNode,
+            _passwordFocusNode,
           );
         },
       );

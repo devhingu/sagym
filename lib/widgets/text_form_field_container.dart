@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
+import 'package:gym/widgets/reusable/reusable_methods.dart';
 
 class TextFormFieldContainer extends StatelessWidget {
   final String label;
@@ -21,7 +22,7 @@ class TextFormFieldContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 20.0),
+      margin: const EdgeInsets.only(top: 22.0),
       child: TextFormField(
         onFieldSubmitted: onSubmit,
         focusNode: focusNode,
@@ -39,12 +40,6 @@ class TextFormFieldContainer extends StatelessWidget {
         ),
         keyboardType: inputType,
       ),
-    );
-  }
-
-  OutlineInputBorder textFormFieldInputBorder() {
-    return const OutlineInputBorder(
-      borderSide: BorderSide(color: kGreyColor),
     );
   }
 }

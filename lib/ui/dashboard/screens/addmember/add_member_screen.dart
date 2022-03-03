@@ -6,8 +6,8 @@ import 'package:gym/constants/constants.dart';
 import 'package:gym/ui/auth/constants/auth_constants.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
 import 'package:gym/ui/dashboard/screens/addmember/add_member_payment_screen.dart';
-import 'package:gym/ui/dashboard/screens/home_page.dart';
-import 'package:gym/ui/dashboard/screens/home_screen.dart';
+import 'package:gym/ui/member/constants/member_constants.dart';
+import 'package:gym/widgets/drop_down_text_field.dart';
 import 'package:gym/widgets/reusable/reusable_methods.dart';
 import 'package:gym/widgets/text_form_field_container.dart';
 
@@ -39,6 +39,7 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
   final FocusNode _heightFocusNode = FocusNode();
   final FocusNode _weightFocusNode = FocusNode();
   final FocusNode _batchFocusNode = FocusNode();
+  String _isActive = "true";
 
   DateTime selectedDate = DateTime.now();
 
@@ -57,6 +58,8 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
     }
   }
 
+  String selectedBatch = "Morning";
+
   @override
   void dispose() {
     super.dispose();
@@ -73,7 +76,7 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -83,10 +86,10 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
               Container(
                 padding: kAllSideBigPadding,
                 margin: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.07,
+                  top: size.height * 0.07,
                 ),
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 0.85,
+                  height: size.height * 0.85,
                   decoration: kCardBoxDecoration,
                   child: Padding(
                     padding: kAllSidePadding,
@@ -111,8 +114,12 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                           ),
                         ),
                         Expanded(child: _emailTextField()),
-                        Expanded(child: _mobileNumberTextField()),
-                        Expanded(child: _addressTextField()),
+                        Expanded(
+                          child: _mobileNumberTextField(),
+                        ),
+                        Expanded(
+                          child: _addressTextField(),
+                        ),
                         Expanded(
                           child: Row(
                             children: [
@@ -133,24 +140,23 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                             ],
                           ),
                         ),
-                        Expanded(child: _batchTextField()),
-                        // heightSizedBox(
-                        //     height: MediaQuery.of(context).size.height * 0.08),
                         Expanded(
-                          child: Padding(
-                            padding: kTopPadding,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  kStepOne,
-                                  style: kTextFormFieldTextStyle,
-                                ),
-                                _bottomNextButton(context)
-                              ],
-                            ),
-                          ),
+                          child: _batchTextField(),
                         ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: _activeRadioTile(),
+                            ),
+                            Expanded(
+                              child: _inactiveRadioTile(),
+                            ),
+                          ],
+                        ),
+                        Align(
+                            alignment: Alignment.bottomRight,
+                            child: _bottomNextButton(context, size)),
                       ],
                     ),
                   ),
@@ -163,7 +169,38 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
     );
   }
 
-  GestureDetector _bottomNextButton(BuildContext context) => GestureDetector(
+  Row _inactiveRadioTile() => Row(
+        children: [
+          Radio<String>(
+            value: 'inactive',
+            groupValue: _isActive,
+            onChanged: (value) {
+              setState(() {
+                _isActive = value!;
+              });
+            },
+          ),
+          const Text('InActive'),
+        ],
+      );
+
+  Row _activeRadioTile() => Row(
+        children: [
+          Radio<String>(
+            value: 'active',
+            groupValue: _isActive,
+            onChanged: (value) {
+              setState(() {
+                _isActive = value!;
+              });
+            },
+          ),
+          const Text('Active'),
+        ],
+      );
+
+  GestureDetector _bottomNextButton(BuildContext context, size) =>
+      GestureDetector(
         onTap: () async {
           await _saveMemberDetailsToFirestore();
           Navigator.pushReplacement(
@@ -175,8 +212,8 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
           );
         },
         child: Container(
-          height: 45.0,
-          width: 45.0,
+          height: size.height * 0.06,
+          width: size.height * 0.06,
           decoration: kCustomButtonBoxDecoration,
           child: const Center(
             child: Icon(
@@ -187,14 +224,17 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
         ),
       );
 
-  TextFormFieldContainer _batchTextField() => TextFormFieldContainer(
-        label: kBatch,
-        inputType: TextInputType.text,
-        controller: _batchController,
-        focusNode: _batchFocusNode,
-        onSubmit: (String? value) {
-          onSubmittedUnFocusMethod(context, _batchFocusNode);
+  DropDownTextField _batchTextField() => DropDownTextField(
+        list: batchList,
+        value: selectedBatch,
+        onChanged: (newValue) {
+          setState(() {
+            selectedBatch = newValue.toString();
+            _batchController.text = newValue.toString();
+          });
         },
+        title: kBatch,
+        focusNode: _batchFocusNode,
       );
 
   TextFormFieldContainer _weightTextField() => TextFormFieldContainer(
@@ -351,7 +391,8 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
         'dob': _dobController.text,
         'height': "${_heightController.text}cm",
         'weight': "${_weightController.text}kg",
-        'batch': _batchController.text,
+        'batch': selectedBatch,
+        'status': _isActive == "active" ? true : false
       });
     } else {
       debugPrint("failed");

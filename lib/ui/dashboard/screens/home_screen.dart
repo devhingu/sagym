@@ -3,9 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
+import 'package:gym/service/list_provider.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
 import 'package:gym/widgets/dashboard/custom_card.dart';
 import 'package:gym/widgets/dashboard/custom_data_column.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import '../../../widgets/reusable/reusable_methods.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = "home_screen";
@@ -21,6 +26,21 @@ class _HomeScreenState extends State<HomeScreen> {
   final user = FirebaseAuth.instance.currentUser;
   String userName = "";
   String imagePath = "";
+  String day = "";
+
+  void getCurrentDate(){
+    DateTime now = DateTime.now();
+    day =
+    "${DateFormat('EEEE').format(now)}, ${DateFormat("MMMM").format(now)} ${now.day}, ${now.year}";
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentData(context);
+    getCurrentUser();
+    getCurrentDate();
+  }
 
   Future getCurrentUser() async {
     if (user?.displayName == null || user?.displayName == "") {
@@ -43,18 +63,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    getCurrentUser();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
             await Future.delayed(const Duration(seconds: 2));
+            getCurrentData(context);
           },
           child: SingleChildScrollView(
             child: Stack(
@@ -63,7 +78,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                   padding: const EdgeInsets.all(16.0),
                   width: double.infinity,
-                  margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.25),
+                  margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.25),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -95,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
         decoration: kCardBoxDecoration,
         child: CardDataColumn(
           title: kDueUsers,
-          titleValue: "30",
+          titleValue: Provider.of<MemberData>(context).dueUserCounts.toString(),
         ),
       );
 
@@ -115,16 +131,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   CustomCard _activeInactiveCard() => CustomCard(
         title1: kActive,
-        titleValue1: "486",
+        titleValue1: Provider.of<MemberData>(context).activeCounts.toString(),
         title2: kInactive,
-        titleValue2: "784",
+        titleValue2: Provider.of<MemberData>(context).inActiveCounts.toString(),
       );
 
   CustomCard _receivedDueCard() => CustomCard(
         title1: kReceived,
-        titleValue1: "210k",
+        titleValue1: NumberFormat.compact()
+            .format(Provider.of<MemberData>(context).receivedAmounts),
         title2: kDue,
-        titleValue2: "130k",
+        titleValue2: NumberFormat.compact()
+            .format(Provider.of<MemberData>(context).dueAmounts),
       );
 
   Container _backgroundContainer() => Container(
@@ -138,14 +156,14 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(child: _homeCustomAppBar()),
             Expanded(child: _totalMembersWidget()),
             Expanded(
-              child: const Text(
-                "1270",
+              child: Text(
+                Provider.of<MemberData>(context).totalUsers.toString(),
                 style: kMemberCountTextStyle,
               ),
             ),
             Expanded(
-              child: const Text(
-                "WED, April 03, 2019",
+              child: Text(
+                day,
                 style: kDateTextStyle,
               ),
             ),
@@ -153,18 +171,15 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
 
-  Padding _totalMembersWidget() => Padding(
-        padding: const EdgeInsets.only(bottom: 10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(kTotalMembers, style: kTitleTextStyle),
-            const Icon(
-              kEllipsisIcon,
-              color: kLightWhiteColor,
-            ),
-          ],
-        ),
+  Row _totalMembersWidget() => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(kTotalMembers, style: kTitleTextStyle),
+          const Icon(
+            kEllipsisIcon,
+            color: kLightWhiteColor,
+          ),
+        ],
       );
 
   Padding _homeCustomAppBar() => Padding(
@@ -172,19 +187,20 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-              width: 280.0,
+            Expanded(
               child: Text(
                 "$kWelcome $userName",
-                style: kAppBarTextStyle,
+                style: kAppBarTextStyle.copyWith(fontSize: 22.0),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
             imagePath.isEmpty
                 ? const CircleAvatar(
+                    radius: 25.0,
                     backgroundImage: AssetImage(kAvatarImagePath),
                   )
                 : CircleAvatar(
+                    radius: 25.0,
                     backgroundImage: NetworkImage(imagePath),
                   )
           ],

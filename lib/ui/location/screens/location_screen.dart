@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:custom_info_window/custom_info_window.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -10,16 +12,19 @@ class LocationScreen extends StatefulWidget {
 }
 
 class _LocationScreenState extends State<LocationScreen> {
-  Set<Marker> _markers = {};
+  final Set<Marker> _markers = {};
   late BitmapDescriptor mapMarker;
-  late GoogleMapController controller;
+  late GoogleMapController mapController;
   // CustomInfoWindowController _customInfoWindowController =
   //     CustomInfoWindowController();
+
+  void getLocations() async {}
 
   @override
   void initState() {
     super.initState();
     setCustomMarker();
+    getLocations();
   }
 
   void setCustomMarker() async {
@@ -27,88 +32,45 @@ class _LocationScreenState extends State<LocationScreen> {
         const ImageConfiguration(), "assets/markers.png");
   }
 
-  void _onMapCreated(GoogleMapController controller) {
-    setState(() {
-      _markers.add(
-        Marker(
-          markerId: const MarkerId('id-1'),
-          icon: mapMarker,
-          position: const LatLng(22.979771, 72.492714),
-          // onTap: () {
-          //   _customInfoWindowController.addInfoWindow!(
-          //     Column(
-          //       children: [
-          //         Expanded(
-          //           child: Container(
-          //             decoration: BoxDecoration(
-          //               color:kMainColor,
-          //               borderRadius: BorderRadius.circular(4),
-          //             ),
-          //             child: Padding(
-          //               padding: const EdgeInsets.all(8.0),
-          //               child: Row(
-          //                 mainAxisAlignment: MainAxisAlignment.center,
-          //                 children: [
-          //                   Image.asset(
-          //                     kDumbbellImagePath,
-          //                     height: 25.0,
-          //                   ),
-          //                   SizedBox(
-          //                     width: 8.0,
-          //                   ),
-          //                   Text(
-          //                     "Sarkhej",
-          //                     style: Theme.of(context)
-          //                         .textTheme
-          //                         .headline6
-          //                         ?.copyWith(
-          //                           color: Colors.white,
-          //                         ),
-          //                   )
-          //                 ],
-          //               ),
-          //             ),
-          //             width: double.infinity,
-          //             height: double.infinity,
-          //           ),
-          //         ),
-                  //
-                  // Triangle.isosceles(
-                  //   edge: Edge.BOTTOM,
-                  //   child: Container(
-                  //     color: kMainColor,
-                  //     width: 20.0,
-                  //     height: 10.0,
-                  //   ),
-                  // ),
-          //       ],
-          //     ),
-          //     LatLng(22.979771, 72.492714),
-          //   );
-          // },
-          infoWindow:
-              const InfoWindow(title: "Sarkhej", snippet: "A Beautiful place"),
-        ),
-      );
-    });
+  void _onMapCreated(GoogleMapController controller) async {
+    String data =
+        await DefaultAssetBundle.of(context).loadString("assets/data.json");
+    final jsonResult = jsonDecode(data);
+
+    for (int i = 0; i < jsonResult["locations"].length; i++) {
+      setState(() {
+        _markers.add(
+          Marker(
+            markerId:  MarkerId("id-$i"),
+            position: LatLng(
+              double.parse(jsonResult["locations"][i]["latitude"]),
+              double.parse(jsonResult["locations"][i]["longitude"]),
+            ),
+            icon: mapMarker,
+            infoWindow: InfoWindow(
+              title: jsonResult["locations"][i]["gymname"],
+              snippet: jsonResult["locations"][i]["address"],
+            ),
+          ),
+        );
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     body: GoogleMap(
-       onMapCreated: _onMapCreated,
-       markers: _markers,
-       initialCameraPosition: const CameraPosition(
-         target: LatLng(22.979771, 72.492714),
-         zoom: 15,
-       ),
-     ),
+      body: GoogleMap(
+        onMapCreated: _onMapCreated,
+        markers: _markers,
+        initialCameraPosition: const CameraPosition(
+          target: LatLng(23.024548, 72.507365),
+          zoom: 15,
+        ),
+      ),
     );
   }
 }
-
-
 
 /* body: Stack(
         children: <Widget>[

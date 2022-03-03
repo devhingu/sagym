@@ -5,10 +5,15 @@ import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
 import 'package:gym/ui/dashboard/screens/addmember/add_member_screen.dart';
+import 'package:gym/ui/dashboard/screens/bottom_sheet_screen.dart';
 import 'package:gym/ui/dashboard/screens/home_page.dart';
 import 'package:gym/ui/member/screens/member_list.dart';
 import 'package:gym/widgets/reusable/reusable_methods.dart';
 import 'package:gym/widgets/text_form_field_container.dart';
+import 'package:intl/intl.dart';
+
+import '../../../../widgets/drop_down_text_field.dart';
+import '../../../../widgets/elevated_custom_button.dart';
 
 class AddMemberPaymentScreen extends StatefulWidget {
   final String email;
@@ -34,19 +39,19 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
   final FocusNode _paymentTypeFocusNode = FocusNode();
   final FocusNode _staffNameFocusNode = FocusNode();
   final _fireStore = FirebaseFirestore.instance;
-
   final kCurrentUser = FirebaseAuth.instance.currentUser;
-  String userName = "";
+  String selectedMemberShipPlan = "3 Months";
+  String selectedPaymentStatus = "Success";
+  String selectedPaymentType = "Cash";
 
   Future getCurrentUser() async {
     if (kCurrentUser?.displayName == null || kCurrentUser?.displayName == "") {
       final snapshots = await _fireStore
           .collection("Trainers")
           .doc(kCurrentUser?.email)
-          .collection("trainerDetails")
           .get();
       setState(() {
-        _staffNameController.text = snapshots.docs.first.get("userName");
+        _staffNameController.text = snapshots.get("userName");
       });
     } else {
       try {
@@ -54,7 +59,7 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
           _staffNameController.text = kCurrentUser!.displayName!;
         }
       } catch (e) {
-        debugPrint("$e");
+        debugPrint(e.toString());
       }
     }
   }
@@ -77,20 +82,20 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Stack(
             children: [
-              _backgroundContainer(),
+              _backgroundContainer(size),
               Container(
                 padding: kAllSideBigPadding,
                 margin: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.07,
+                  top: size.height * 0.07,
                 ),
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 0.85,
+                  height: size.height * 0.85,
                   decoration: kCardBoxDecoration,
                   child: Padding(
                     padding: kAllSidePadding,
@@ -101,7 +106,9 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
                           kMembershipDetails,
                           style: kTextFormFieldTextStyle,
                         ),
-                        Expanded(child: _membershipPlanTextField()),
+                        Expanded(
+                          child: _memberShipTextField(),
+                        ),
                         Expanded(
                           child: _amountTextField(),
                         ),
@@ -115,9 +122,7 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
                           child: _staffNameTextField(),
                         ),
                         // heightSizedBox(height: MediaQuery.of(context).size.height * 0.15),
-                        Expanded(
-                          child: _bottomPreviousButton(context),
-                        ),
+                        _bottomPreviousButton(context, size),
                       ],
                     ),
                   ),
@@ -130,22 +135,18 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
     );
   }
 
-  Padding _bottomPreviousButton(BuildContext context) => Padding(
+  Padding _bottomPreviousButton(BuildContext context, size) => Padding(
         padding: kTopPadding,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              kStepTwo,
-              style: kTextFormFieldTextStyle,
-            ),
             GestureDetector(
               onTap: () {
                 navigatePushReplacementMethod(context, AddMemberScreen.id);
               },
               child: Container(
-                height: 35.0,
-                width: 35.0,
+                height: size.height * 0.06,
+                width: size.height * 0.06,
                 decoration: kCustomButtonBoxDecoration,
                 child: const Center(
                   child: Icon(
@@ -155,19 +156,13 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
                 ),
               ),
             ),
-            ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all(kFloatingActionButtonColor),
-              ),
-              onPressed: () async {
+            ElevatedCustomButton(
+              onPress: () async {
                 await _saveMemberDetailsToFirestore();
+                await getCurrentData(context);
                 Navigator.pop(context);
               },
-              child: Text(
-                kAddMember,
-                style: kCustomButtonTextStyle,
-              ),
+              title: kAddMember,
             ),
           ],
         ),
@@ -183,31 +178,9 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
         },
       );
 
-  TextFormFieldContainer _paymentTextField() => TextFormFieldContainer(
-        label: kPayment,
-        inputType: TextInputType.text,
-        controller: _paymentController,
-        focusNode: _paymentTypeFocusNode,
-        onSubmit: (String? value) {
-          onSubmittedFocusMethod(
-              context, _paymentTypeFocusNode, _staffNameFocusNode);
-        },
-      );
-
-  TextFormFieldContainer _paymentTypeTextField() => TextFormFieldContainer(
-        label: kPaymentType,
-        inputType: TextInputType.text,
-        controller: _paymentTypeController,
-        focusNode: _paymentFocusNode,
-        onSubmit: (String? value) {
-          onSubmittedFocusMethod(
-              context, _paymentFocusNode, _paymentTypeFocusNode);
-        },
-      );
-
   TextFormFieldContainer _amountTextField() => TextFormFieldContainer(
         label: kAmount,
-        inputType: TextInputType.text,
+        inputType: TextInputType.number,
         controller: _amountController,
         focusNode: _amountFocusNode,
         onSubmit: (String? value) {
@@ -215,20 +188,54 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
         },
       );
 
-  TextFormFieldContainer _membershipPlanTextField() => TextFormFieldContainer(
-        label: kMembershipPlan,
-        inputType: TextInputType.text,
-        controller: _memberShipPlanController,
-        focusNode: _memberShipPlanFocusNode,
-        onSubmit: (String? value) {
-          onSubmittedFocusMethod(
-              context, _memberShipPlanFocusNode, _amountFocusNode);
-        },
-      );
+  DropDownTextField _paymentTextField() {
+    return DropDownTextField(
+      list: paymentStatusList,
+      focusNode: _paymentFocusNode,
+      title: kPayment,
+      value: selectedPaymentStatus,
+      onChanged: (newValue) {
+        setState(() {
+          selectedPaymentStatus = newValue.toString();
+          _paymentController.text = newValue.toString();
+        });
+      },
+    );
+  }
 
-  Container _backgroundContainer() => Container(
+  DropDownTextField _paymentTypeTextField() {
+    return DropDownTextField(
+      list: paymentTypeList,
+      value: selectedPaymentType,
+      focusNode: _paymentTypeFocusNode,
+      title: kPaymentType,
+      onChanged: (newValue) {
+        setState(() {
+          selectedPaymentType = newValue.toString();
+          _paymentTypeController.text = newValue.toString();
+        });
+      },
+    );
+  }
+
+  DropDownTextField _memberShipTextField() {
+    return DropDownTextField(
+      list: memberShipPlanList,
+      value: selectedMemberShipPlan,
+      focusNode: _memberShipPlanFocusNode,
+      title: kMembershipPlan,
+      onChanged: (newValue) {
+        setState(() {
+          selectedMemberShipPlan = newValue.toString();
+          _memberShipPlanController.text = newValue.toString();
+        });
+      },
+    );
+  }
+
+  Container _backgroundContainer(size) => Container(
         padding: kAllSideBigPadding,
-        height: MediaQuery.of(context).size.height * 0.2,
+        height: size.height * 0.2,
         color: kMainColor,
         child: _homeCustomAppBar(),
       );
@@ -262,10 +269,20 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
       );
 
   _saveMemberDetailsToFirestore() async {
+    int amount = 5000;
+    int dueAmount = 0;
+    int enteredAmount = int.parse(_amountController.text);
+
     if (_memberShipPlanController.text.trim().isNotEmpty &&
         _amountController.text.trim().isNotEmpty &&
         _paymentController.text.trim().isNotEmpty &&
         _paymentTypeController.text.trim().isNotEmpty) {
+      if (enteredAmount < amount) {
+        dueAmount = amount - enteredAmount;
+      } else {
+        dueAmount = 0;
+      }
+
       await _fireStore
           .collection("Trainers")
           .doc(kCurrentUser?.email)
@@ -273,11 +290,13 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
           .doc(widget.email)
           .update({
         'memberShipPlan': _memberShipPlanController.text,
-        'amount': _amountController.text,
+        'dueAmount': dueAmount.toString(),
+        'receivedAmount': enteredAmount.toString(),
         'paymentType': _paymentTypeController.text,
         'paymentStatus': _paymentController.text,
         'staffName': _staffNameController.text,
       });
+
     } else {
       debugPrint("failed");
     }
@@ -287,3 +306,38 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
     _paymentTypeController.clear();
   }
 }
+
+/*
+* TextFormFieldContainer _paymentTextField() => TextFormFieldContainer(
+        label: kPayment,
+        inputType: TextInputType.text,
+        controller: _paymentController,
+        focusNode: _paymentTypeFocusNode,
+        onSubmit: (String? value) {
+          onSubmittedFocusMethod(
+              context, _paymentTypeFocusNode, _staffNameFocusNode);
+        },
+      );
+
+  TextFormFieldContainer _paymentTypeTextField() => TextFormFieldContainer(
+        label: kPaymentType,
+        inputType: TextInputType.text,
+        controller: _paymentTypeController,
+        focusNode: _paymentFocusNode,
+        onSubmit: (String? value) {
+          onSubmittedFocusMethod(
+              context, _paymentFocusNode, _paymentTypeFocusNode);
+        },
+      );
+      *
+      *   TextFormFieldContainer _membershipPlanTextField() => TextFormFieldContainer(
+        label: kMembershipPlan,
+        inputType: TextInputType.text,
+        controller: _memberShipPlanController,
+        focusNode: _memberShipPlanFocusNode,
+        onSubmit: (String? value) {
+          onSubmittedFocusMethod(
+              context, _memberShipPlanFocusNode, _amountFocusNode);
+        },
+      );
+*/

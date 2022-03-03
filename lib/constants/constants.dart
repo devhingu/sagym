@@ -57,6 +57,7 @@ const kTopSmallPadding = EdgeInsets.only(top: 16.0);
 const kTopPadding = EdgeInsets.only(top: 32.0);
 const kTBottomPadding = EdgeInsets.only(bottom: 16.0);
 const kDividerPadding = EdgeInsets.only(top: 16.0, bottom: 8.0);
+const kThreeSidePadding =  EdgeInsets.only(right: 16.0, left: 16.0, top: 16.0);
 
 //bottom nav items
 const kBottomNavItems = [

@@ -1,15 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
-import 'package:gym/ui/dashboard/screens/addmember/add_member_screen.dart';
-import 'package:gym/ui/dashboard/screens/home_page.dart';
-import 'package:gym/ui/member/screens/member_list.dart';
 import 'package:gym/widgets/reusable/reusable_methods.dart';
 import 'package:gym/widgets/text_form_field_container.dart';
+
+import '../../../../widgets/drop_down_text_field.dart';
 
 class AddExpensesScreen extends StatefulWidget {
   static const String id = "add_expenses";
@@ -36,26 +34,27 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
   final _fireStore = FirebaseFirestore.instance;
 
   final kCurrentUser = FirebaseAuth.instance.currentUser;
-  String userName = "";
+  String imagePath = "";
+  String selectedAccessoriesType = "Dumbbells";
 
   Future getCurrentUser() async {
     if (kCurrentUser?.displayName == null || kCurrentUser?.displayName == "") {
       final snapshots = await _fireStore
           .collection("Trainers")
           .doc(kCurrentUser?.email)
-          .collection("trainerDetails")
           .get();
       setState(() {
-        _gymAccessoriesAddedByController.text =
-            snapshots.docs.first.get("userName");
+        _gymAccessoriesAddedByController.text = snapshots.get("userName");
+        imagePath = "";
       });
     } else {
       try {
         if (kCurrentUser != null) {
           _gymAccessoriesAddedByController.text = kCurrentUser!.displayName!;
+          imagePath = kCurrentUser!.photoURL!;
         }
       } catch (e) {
-        debugPrint("$e");
+        debugPrint(e.toString());
       }
     }
   }
@@ -73,20 +72,20 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Stack(
             children: [
-              _backgroundContainer(),
+              _backgroundContainer(size),
               Container(
                 padding: kAllSideBigPadding,
                 margin: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.07,
+                  top: size.height * 0.07,
                 ),
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 0.85,
+                  height: size.height * 0.85,
                   decoration: kCardBoxDecoration,
                   child: Padding(
                     padding: kAllSidePadding,
@@ -101,7 +100,20 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
                               style: kTextFormFieldTextStyle,
                             ),
                             _gymAccessoriesNameTextField(),
-                            _gymAccessoriesTypeTextField(),
+                            DropDownTextField(
+                              list: accessoriesTypeList,
+                              value: selectedAccessoriesType,
+                              title: "Accessories Type",
+                              focusNode: _gymAccessoriesTypeFocusNode,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  selectedAccessoriesType = newValue.toString();
+
+                                  _gymAccessoriesTypeController.text =
+                                      newValue.toString();
+                                });
+                              },
+                            ),
                             _gymAccessoriesExpenseTextField(),
                             _gymAccessoriesAddedByTextField(),
                           ],
@@ -120,26 +132,29 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
   }
 
   Align _bottomButton(BuildContext context) => Align(
-    alignment: Alignment.center,
-    child: ElevatedButton(
+        alignment: Alignment.center,
+        child: ElevatedButton(
           style: ButtonStyle(
             backgroundColor:
                 MaterialStateProperty.all(kFloatingActionButtonColor),
           ),
           onPressed: () async {
-            // await _saveMemberDetailsToFirestore();
+            await _saveExpenseDetailToFirestore();
             Navigator.pop(context);
           },
-          child: const Text(
-            "Add Expense",
-            style: kCustomButtonTextStyle,
+          child: Padding(
+            padding: kAllSideSmallPadding,
+            child: Text(
+              kAddExpense,
+              style: kCustomButtonTextStyle,
+            ),
           ),
         ),
-  );
+      );
 
   TextFormFieldContainer _gymAccessoriesNameTextField() =>
       TextFormFieldContainer(
-        label: "Accessories Name",
+        label: kAccessoriesName,
         inputType: TextInputType.text,
         controller: _gymAccessoriesNameController,
         focusNode: _gymAccessoriesNameFocusNode,
@@ -151,7 +166,7 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
 
   TextFormFieldContainer _gymAccessoriesTypeTextField() =>
       TextFormFieldContainer(
-        label: "Accessories Type",
+        label: kAccessoriesType,
         inputType: TextInputType.text,
         controller: _gymAccessoriesTypeController,
         focusNode: _gymAccessoriesTypeFocusNode,
@@ -163,8 +178,8 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
 
   TextFormFieldContainer _gymAccessoriesExpenseTextField() =>
       TextFormFieldContainer(
-        label: "Expense",
-        inputType: TextInputType.text,
+        label: kExpense,
+        inputType: TextInputType.number,
         controller: _gymAccessoriesExpenseController,
         focusNode: _gymAccessoriesExpenseFocusNode,
         onSubmit: (String? value) {
@@ -175,7 +190,7 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
 
   TextFormFieldContainer _gymAccessoriesAddedByTextField() =>
       TextFormFieldContainer(
-        label: "Added By",
+        label: kAddedBy,
         inputType: TextInputType.text,
         controller: _gymAccessoriesAddedByController,
         focusNode: _gymAccessoriesAddedByFocusNode,
@@ -184,9 +199,9 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
         },
       );
 
-  Container _backgroundContainer() => Container(
+  Container _backgroundContainer(size) => Container(
         padding: kAllSideBigPadding,
-        height: MediaQuery.of(context).size.height * 0.2,
+        height: size.height * 0.2,
         color: kMainColor,
         child: _homeCustomAppBar(),
       );
@@ -206,7 +221,7 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
                   color: kLightWhiteColor,
                 ),
                 Text(
-                  kAddExpenses,
+                  kAddExpense,
                   style: kAppBarTextStyle,
                 ),
               ],
@@ -215,29 +230,35 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
         ],
       );
 
-/* _saveMemberDetailsToFirestore() async {
-    if (_memberShipPlanController.text.trim().isNotEmpty &&
-        _amountController.text.trim().isNotEmpty &&
-        _paymentController.text.trim().isNotEmpty &&
-        _paymentTypeController.text.trim().isNotEmpty) {
-      await _fireStore
-          .collection("Trainers")
-          .doc(kCurrentUser?.email)
-          .collection("memberDetails")
-          .doc(widget.email)
-          .update({
-        'memberShipPlan': _memberShipPlanController.text,
-        'amount': _amountController.text,
-        'paymentType': _paymentTypeController.text,
-        'paymentStatus': _paymentController.text,
-        'staffName': _staffNameController.text,
+  _saveExpenseDetailToFirestore() async {
+    if (_gymAccessoriesNameController.text.trim().isNotEmpty &&
+        _gymAccessoriesTypeController.text.trim().isNotEmpty &&
+        _gymAccessoriesExpenseController.text.trim().isNotEmpty &&
+        _gymAccessoriesAddedByController.text.trim().isNotEmpty) {
+      await _fireStore.collection("Expenses").add({
+        'accessoriesName': _gymAccessoriesNameController.text,
+        'accessoriesType': _gymAccessoriesTypeController.text,
+        'accessoriesExpense': "${_gymAccessoriesExpenseController.text} ₹",
+        'addedBy': _gymAccessoriesAddedByController.text,
+        'userUid': kCurrentUser?.uid,
+        'userProfileImage': imagePath.isEmpty ? kAvatarImagePath : imagePath,
       });
     } else {
       debugPrint("failed");
     }
-    _memberShipPlanController.clear();
-    _amountController.clear();
-    _paymentController.clear();
-    _paymentTypeController.clear();
-  }*/
+    _gymAccessoriesNameController.clear();
+    _gymAccessoriesTypeController.clear();
+    _gymAccessoriesExpenseController.clear();
+    _gymAccessoriesAddedByController.clear();
+  }
 }
+
+// DropDownTextField _gymAccessoriesTypeTextField() => DropDownTextField(
+//         list: accessoriesTypeList,
+//         value: selectedAccessoriesType,
+//         title: "Accessories Type",
+//         focusNode: _gymAccessoriesTypeFocusNode,
+//         onChanged: (newValue) {
+//           setState(() => selectedAccessoriesType = newValue.toString());
+//         },
+//       );

@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/service/firebase_service.dart';
+import 'package:gym/ui/account/screens/chnage_password.dart';
 import 'package:gym/ui/auth/screens/login/sign_in_screen.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
+import 'package:gym/ui/dashboard/screens/addexpenses/gym_expenses_list.dart';
 import 'package:gym/widgets/reusable/reusable_methods.dart';
 import '../../../widgets/profile/user_profile_list_tile.dart';
 import '../../member/constants/member_constants.dart';
@@ -24,15 +26,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   String userName = "";
   String email = "";
   String imagePath = "";
-  final fb = FacebookLogin();
 
   Future getCurrentUser() async {
     if (user?.displayName == null || user?.displayName == "") {
       final snapshots =
           await _fireStore.collection("Trainers").doc(user?.email).get();
       setState(() {
-        userName = snapshots.get(paramsUserName);
-        email = snapshots.get(paramsEmail);
+        userName = snapshots.get("userName");
+        email = snapshots.get("email");
         imagePath = "";
       });
     } else {
@@ -41,7 +42,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           userName = user!.displayName!;
           email = user!.email!;
           imagePath = user!.photoURL!;
-          print(fb.getProfileImageUrl.toString());
         }
       } catch (e) {
         debugPrint(e.toString());
@@ -69,7 +69,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             Container(
               padding: const EdgeInsets.all(16.0),
               width: size.width,
-              height: 170.0,
+              height: size.height * 0.25,
               decoration: kUserProfileBoxDecoration,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -91,6 +91,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             heightSizedBox(height: 10.0),
             Column(
               children: [
+                _getGymExpenseTile(),
                 _changePasswordTile(),
                 _logoutTile(context),
                 _getHelpTile(),
@@ -128,7 +129,25 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   UserProfileListTile _changePasswordTile() => UserProfileListTile(
         title: kChangePassword,
         icon: kPasswordIcon,
-        onPress: () {},
+        onPress: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const ChangePasswordScreen()));
+        },
+      );
+
+  UserProfileListTile _getGymExpenseTile() => UserProfileListTile(
+        onPress: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const GymExpensesList(),
+            ),
+          );
+        },
+        icon: kPriceIcon,
+        title: kGymExpenses,
       );
 
   CircleAvatar _circleAvatar() => CircleAvatar(
@@ -151,9 +170,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       );
 
   Text _emailText() => Text(
-    email,
-    style: kUserEmailTextStyle,
-  );
+        email,
+        style: kUserEmailTextStyle,
+      );
 
   SizedBox _userNameText() => SizedBox(
         width: 220.0,

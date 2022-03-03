@@ -27,9 +27,9 @@ class CustomCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          CardDataColumn(title: title1, titleValue: titleValue1),
+          Expanded(child: CardDataColumn(title: title1, titleValue: titleValue1)),
           verticalDivider(),
-          CardDataColumn(title: title2, titleValue: titleValue2),
+          Expanded(child: CardDataColumn(title: title2, titleValue: titleValue2)),
         ],
       ),
     );

@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gym/constants/constants.dart';
 import 'package:gym/ui/auth/constants/auth_constants.dart';
+import 'package:gym/ui/auth/screens/login/sign_in_screen.dart';
+import 'package:gym/ui/dashboard/screens/home_page.dart';
+import 'package:gym/widgets/reusable/reusable_methods.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -27,14 +30,14 @@ class _SplashScreenState extends State<SplashScreen>
     });
     controller.forward();
     controller.addStatusListener((status) {
-      // if (status == AnimationStatus.completed) {
-      //   final kCurrentUser = FirebaseAuth.instance.currentUser;
-      //   if (kCurrentUser?.email == null) {
-      //     navigatePushReplacementScreen(context, const SignInScreen());
-      //   } else {
-      //     navigatePushReplacementScreen(context, const HomePage());
-      //   }
-      // }
+      if (status == AnimationStatus.completed) {
+        final kCurrentUser = FirebaseAuth.instance.currentUser;
+        if (kCurrentUser?.email == null) {
+          navigatePushReplacementMethod(context,  SignInScreen.id);
+        } else {
+          navigatePushReplacementMethod(context, HomePage.id);
+        }
+      }
     });
   }
 
@@ -53,12 +56,16 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Image.asset(
-          kDumbbellImagePath,
-          width: animation.value,
-          //height: _animation.value,
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Image.asset(
+            kDumbbellImagePath,
+            width: animation.value,
+          ),
+          Text(kTitleSaGym),
+        ],
       ),
     );
   }

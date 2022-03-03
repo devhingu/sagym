@@ -20,7 +20,7 @@ class TopLogoTitleWidget extends StatelessWidget {
             color: kMainColor,
           ),
           Text(
-            kTitleBodyFitGym,
+            kTitleSaGym,
             style: kAppTitleTextStyle,
           ),
         ],

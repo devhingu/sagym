@@ -27,7 +27,7 @@ class MemberTile extends StatelessWidget {
     return GestureDetector(
       onTap: onPress,
       child: Container(
-        margin: kTBottomPadding,
+        margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
         padding: kAllSideVerySmallPadding,
         decoration: kCardBoxDecoration,
         child: _memberTile(),
