@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
-import 'package:clippy_flutter/clippy_flutter.dart';
 
 class LocationScreen extends StatefulWidget {
   static const String id = "location_screen";
@@ -63,14 +62,14 @@ class _LocationScreenState extends State<LocationScreen> {
   Column _mapCustomInfoWindow(jsonResult, int i) => Column(
         children: [
           _customInfoWindowContainer(jsonResult, i),
-          Triangle.isosceles(
-            edge: Edge.BOTTOM,
-            child: Container(
-              color: kMainColor,
-              width: 20.0,
-              height: 10.0,
-            ),
-          ),
+          // Triangle.isosceles(
+          //   edge: Edge.BOTTOM,
+          //   child: Container(
+          //     color: kMainColor,
+          //     width: 20.0,
+          //     height: 10.0,
+          //   ),
+          // ),
         ],
       );
 

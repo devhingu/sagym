@@ -217,18 +217,12 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: SizedBox(
-                width: 180.0,
-                child: FittedBox(
-                  child: Text(
-                    "$kWelcome $userName",
-                    style: kAppBarTextStyle.copyWith(fontSize: 22.0),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
+              child: Text(
+                "$kWelcome $userName",
+                style: kAppBarTextStyle.copyWith(fontSize: 22.0),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
-            widthSizedBox(width: 10.0),
             imagePath.isEmpty
                 ? const CircleAvatar(
                     radius: 20.0,
