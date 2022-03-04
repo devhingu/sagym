@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:custom_info_window/custom_info_window.dart';
@@ -9,6 +8,8 @@ import 'package:gym/constants/constants.dart';
 import 'package:clippy_flutter/clippy_flutter.dart';
 
 class LocationScreen extends StatefulWidget {
+  static const String id = "location_screen";
+
   const LocationScreen({Key? key}) : super(key: key);
 
   @override
@@ -61,28 +62,7 @@ class _LocationScreenState extends State<LocationScreen> {
 
   Column _mapCustomInfoWindow(jsonResult, int i) => Column(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: kMainColor,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    jsonResult["locations"][i]["gymname"],
-                    style: kAppTitleTextStyle.copyWith(color: kWhiteColor),
-                  ),
-                  Text(
-                    jsonResult["locations"][i]["address"],
-                    style: const TextStyle(color: kWhiteColor),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          _customInfoWindowContainer(jsonResult, i),
           Triangle.isosceles(
             edge: Edge.BOTTOM,
             child: Container(
@@ -92,6 +72,29 @@ class _LocationScreenState extends State<LocationScreen> {
             ),
           ),
         ],
+      );
+
+  Container _customInfoWindowContainer(jsonResult, int i) => Container(
+        decoration: BoxDecoration(
+          color: kMainColor,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                jsonResult["locations"][i]["gymname"],
+                style: kAppTitleTextStyle.copyWith(color: kWhiteColor),
+              ),
+              Text(
+                jsonResult["locations"][i]["address"],
+                style: const TextStyle(color: kWhiteColor),
+              ),
+            ],
+          ),
+        ),
       );
 
   @override

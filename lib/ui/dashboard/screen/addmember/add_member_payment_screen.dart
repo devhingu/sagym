@@ -4,13 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
-import 'package:gym/ui/dashboard/screens/addmember/add_member_screen.dart';
-import 'package:gym/ui/dashboard/screens/bottom_sheet_screen.dart';
-import 'package:gym/ui/dashboard/screens/home_page.dart';
-import 'package:gym/ui/member/screens/member_list.dart';
+import 'package:gym/ui/dashboard/screen/addmember/add_member_screen.dart';
 import 'package:gym/constants/methods/reusable_methods.dart';
 import 'package:gym/widgets/text_form_field_container.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../provider/member_provider.dart';
@@ -120,32 +116,7 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
                         decoration: kCardBoxDecoration,
                         child: Padding(
                           padding: kAllSidePadding,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                kMembershipDetails,
-                                style: kTextFormFieldTextStyle,
-                              ),
-                              Expanded(
-                                child: _memberShipTextField(),
-                              ),
-                              Expanded(
-                                child: _amountTextField(),
-                              ),
-                              Expanded(
-                                child: _paymentTypeTextField(),
-                              ),
-                              Expanded(
-                                child: _paymentTextField(),
-                              ),
-                              Expanded(
-                                child: _staffNameTextField(),
-                              ),
-                              // heightSizedBox(height: MediaQuery.of(context).size.height * 0.15),
-                              _bottomPreviousButton(context, size),
-                            ],
-                          ),
+                          child: _memberShipDetailsColumn(context, size),
                         ),
                       ),
                     ),
@@ -155,6 +126,32 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
       ),
     );
   }
+
+  Column _memberShipDetailsColumn(BuildContext context, Size size) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            kMembershipDetails,
+            style: kTextFormFieldTextStyle,
+          ),
+          Expanded(
+            child: _memberShipTextField(),
+          ),
+          Expanded(
+            child: _amountTextField(),
+          ),
+          Expanded(
+            child: _paymentTypeTextField(),
+          ),
+          Expanded(
+            child: _paymentTextField(),
+          ),
+          Expanded(
+            child: _staffNameTextField(),
+          ),
+          _bottomPreviousButton(context, size),
+        ],
+      );
 
   Container _successContainer(Size size) {
     return Container(

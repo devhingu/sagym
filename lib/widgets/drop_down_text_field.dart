@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gym/constants/methods/reusable_methods.dart';
 
 import '../constants/constants.dart';
-import '../ui/dashboard/constants/dashboard_constants.dart';
 
 class DropDownTextField extends StatefulWidget {
   final List<String> list;
@@ -42,13 +41,7 @@ class _DropDownTextFieldState extends State<DropDownTextField> {
       child: DropdownButtonFormField(
         focusNode: widget.focusNode,
         items: list.map((String category) {
-          return DropdownMenuItem(
-            value: category,
-            child: Text(
-              category,
-              style: kTextFormFieldTextStyle,
-            ),
-          );
+          return _dropDownMenuItem(category);
         }).toList(),
         onChanged: widget.onChanged,
         value: widget.value,
@@ -62,4 +55,13 @@ class _DropDownTextFieldState extends State<DropDownTextField> {
       ),
     );
   }
+
+  DropdownMenuItem<String> _dropDownMenuItem(String category) =>
+      DropdownMenuItem(
+        value: category,
+        child: Text(
+          category,
+          style: kTextFormFieldTextStyle,
+        ),
+      );
 }

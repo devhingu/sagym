@@ -5,6 +5,8 @@ import '../../../constants/color_constants.dart';
 import '../../../widgets/member/reminder_list_tile.dart';
 
 class ReminderScreen extends StatefulWidget {
+  static const String id = "reminder_screen";
+
   const ReminderScreen({Key? key}) : super(key: key);
 
   @override
@@ -21,7 +23,12 @@ class _ReminderScreenState extends State<ReminderScreen> {
       appBar: AppBar(
         title: const Text("Reminders"),
       ),
-      body: StreamBuilder<QuerySnapshot>(
+      body: _reminderStreamBuilder(),
+    );
+  }
+
+  StreamBuilder<QuerySnapshot<Object?>> _reminderStreamBuilder() =>
+      StreamBuilder<QuerySnapshot>(
           stream: _fireStore
               .collection("Trainers")
               .doc(kCurrentUser?.email)
@@ -35,7 +42,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
                 ),
               );
             }
-
             return ListView.builder(
               itemCount: snapshot.data?.docs.length,
               itemBuilder: (ctx, index) {
@@ -46,7 +52,5 @@ class _ReminderScreenState extends State<ReminderScreen> {
                 );
               },
             );
-          }),
-    );
-  }
+          });
 }

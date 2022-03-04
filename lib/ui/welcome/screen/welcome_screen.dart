@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
-import 'package:gym/ui/auth/screens/signup/sign_up_screen.dart';
 import 'package:gym/widgets/custom_button.dart';
 import 'package:gym/widgets/welcome/welcome_top_image_container.dart';
 import 'package:gym/constants/methods/reusable_methods.dart';
 
+import '../../auth/screen/signup/sign_up_screen.dart';
 import '../constants/welcome_constants.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -47,24 +47,38 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 children: _buildPageIndicator(),
               ),
               _currentPage != _numPages - 1
-                  ? _bottomNextButton()
-                  : Padding(
-                      padding: kAllSideBigPadding,
-                      child: CustomButton(
-                          title: kGetStarted,
-                          onPress: () {
-                            navigatePopAndPushNamedMethod(
-                              context,
-                              SignUpScreen.id,
-                            );
-                          }),
-                    )
+                  ? _nextButton()
+                  : _getStartedButton(context)
             ],
           ),
         ),
       ),
     );
   }
+
+  Padding _getStartedButton(BuildContext context) => Padding(
+        padding: kAllSideBigPadding,
+        child: CustomButton(
+            title: kGetStarted,
+            onPress: () {
+              navigatePopAndPushNamedMethod(
+                context,
+                SignUpScreen.id,
+              );
+            }),
+      );
+
+  Padding _nextButton() => Padding(
+        padding: kAllSideBigPadding,
+        child: CustomButton(
+            title: kNext,
+            onPress: () {
+              _pageController.nextPage(
+                duration: kDuration,
+                curve: Curves.ease,
+              );
+            }),
+      );
 
   SizedBox _pageView(Size size) => SizedBox(
         height: size.height * 0.65,
@@ -102,38 +116,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   style: kLabelTextStyle,
                 ),
         ),
-      );
-
-  Expanded _bottomNextButton() => Expanded(
-        child: Align(
-          alignment: FractionalOffset.bottomRight,
-          child: TextButton(
-            onPressed: () {
-              _pageController.nextPage(
-                duration: kDuration,
-                curve: Curves.ease,
-              );
-            },
-            child: _nextRowWidget(),
-          ),
-        ),
-      );
-
-  Row _nextRowWidget() => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            kNext,
-            style: kLabelTextStyle,
-          ),
-          const SizedBox(width: 5.0),
-          const Icon(
-            kForwardIcon,
-            color: kDarkGreyColor,
-            size: 30.0,
-          ),
-        ],
       );
 
   WelcomeTopImageContainer _imageContainer3() => WelcomeTopImageContainer(

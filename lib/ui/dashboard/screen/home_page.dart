@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
-import 'package:gym/ui/account/screens/user_profile_screen.dart';
-import 'package:gym/ui/dashboard/screens/bottom_sheet_screen.dart';
-import 'package:gym/ui/dashboard/screens/home_screen.dart';
-import 'package:gym/ui/member/screens/member_list.dart';
+import 'package:gym/ui/account/screen/user_profile_screen.dart';
+import 'package:gym/ui/dashboard/screen/bottom_sheet_screen.dart';
+import 'package:gym/ui/dashboard/screen/home_screen.dart';
+import 'package:gym/ui/member/screen/member_list.dart';
 
-import '../../location/screens/location_screen.dart';
+import '../../location/screen/location_screen.dart';
+import '../constants/dashboard_constants.dart';
 
 class HomePage extends StatefulWidget {
   static const String id = "home_page";
@@ -40,16 +41,16 @@ class _HomePageState extends State<HomePage> {
       resizeToAvoidBottomInset: false,
       body: _children[_selectedIndex],
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: buildFloatingActionButton(context, size),
+      floatingActionButton: _floatingActionButton(context, size),
       bottomNavigationBar: bottomNavBar(),
     );
   }
 
-  FloatingActionButton buildFloatingActionButton(BuildContext context, size) =>
+  FloatingActionButton _floatingActionButton(BuildContext context, size) =>
       FloatingActionButton(
         backgroundColor: kFloatingActionButtonColor,
         child: const Icon(
-          Icons.add,
+          kAddIcon,
           color: kWhiteColor,
           size: 30.0,
         ),
@@ -59,17 +60,15 @@ class _HomePageState extends State<HomePage> {
         elevation: 8.0,
       );
 
-  openBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      elevation: 0,
-      barrierColor: Colors.black.withAlpha(1),
-      backgroundColor: Colors.transparent,
-      useRootNavigator: true,
-      builder: (context) => const BottomSheetScreen(),
-    );
-  }
+  openBottomSheet() => showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        elevation: 0,
+        barrierColor: Colors.black.withAlpha(1),
+        backgroundColor: Colors.transparent,
+        useRootNavigator: true,
+        builder: (context) => const BottomSheetScreen(),
+      );
 
   BottomNavigationBar bottomNavBar() => BottomNavigationBar(
         iconSize: 24.0,

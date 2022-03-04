@@ -38,6 +38,9 @@ String kExpense = "Expense";
 String kAddedBy = "Added By";
 String kSendReminder = "Send Reminder";
 String kExpensesDetails = "Expenses Details";
+String kMessage = "Message";
+String kStartDate= "Start Date";
+String kEndDate= "End Date";
 
 //params
 String paramsAccessoriesName = "accessoriesName";
@@ -45,10 +48,11 @@ String paramsAccessoriesType = "accessoriesType";
 String paramsAccessoriesExpense = "accessoriesExpense";
 String paramsAddedBy = "addedBy";
 String paramsUserUid = "userUid";
-String paramsUserProfileImage= "userProfileImage";
+String paramsUserProfileImage = "userProfileImage";
 
 //icons
 const kEllipsisIcon = CupertinoIcons.ellipsis_vertical;
+const kAddIcon = Icons.add;
 
 //image paths
 const kAvatarImagePath = "assets/avatar.png";
@@ -96,6 +100,7 @@ BoxDecoration kCardBoxDecoration = BoxDecoration(
 
 //batch list
 final batchList = ["Morning", "Evening"];
+
 //membership plan list
 final memberShipPlanList = ["3 Months", "6 Months", "9 Months", "1 Year"];
 

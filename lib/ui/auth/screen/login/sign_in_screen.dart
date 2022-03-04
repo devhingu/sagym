@@ -1,11 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gym/constants/constants.dart';
 import 'package:gym/service/firebase_auth_service.dart';
-import 'package:gym/ui/dashboard/screens/home_page.dart';
 import 'package:gym/ui/auth/constants/auth_constants.dart';
-import 'package:gym/ui/auth/screens/login/sign_in_screen.dart';
 import 'package:gym/widgets/auth/bottom_rich_text.dart';
 import 'package:gym/widgets/auth/social_media_button.dart';
 import 'package:gym/widgets/custom_button.dart';
@@ -13,29 +10,29 @@ import 'package:gym/constants/methods/reusable_methods.dart';
 import 'package:gym/widgets/text_form_field_container.dart';
 import 'package:gym/widgets/top_logo_title_widget.dart';
 
-class SignUpScreen extends StatefulWidget {
-  static const String id = "sign_up_screen";
+import '../../../dashboard/screen/home_page.dart';
+import '../forgotpassword/forgot_password.dart';
+import '../signup/sign_up_screen.dart';
 
-  const SignUpScreen({Key? key}) : super(key: key);
+class SignInScreen extends StatefulWidget {
+  static const String id = "sign_in_screen";
+
+  const SignInScreen({Key? key}) : super(key: key);
 
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  _SignInScreenState createState() => _SignInScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
-  final TextEditingController _userNameController = TextEditingController();
+class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final FocusNode _userNameFocusNode = FocusNode();
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
-  final _fireStore = FirebaseFirestore.instance;
-  bool isSignup = false;
+  bool isSignIn = false;
 
   @override
   void dispose() {
     super.dispose();
-    _userNameFocusNode.dispose();
     _emailFocusNode.dispose();
     _passwordFocusNode.dispose();
   }
@@ -51,15 +48,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: SizedBox(
               height: size.height,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const TopLogoTitleWidget(),
-                  _userNameTextField(context),
                   _emailTextField(context),
                   _passwordTextField(context),
                   heightSizedBox(height: 15.0),
-                  _signUpButton(context),
+                  _signInButton(context),
+                  heightSizedBox(height: 5.0),
+                  _forgotPasswordWidget(),
                   const Padding(
                     padding: kDividerPadding,
                     child: Divider(),
@@ -68,10 +66,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Padding(
                     padding: kAllSideSmallPadding,
                     child: BottomRichText(
-                      startText: kAlreadyHaveAnAccount,
-                      endText: kSignIn,
+                      startText: kDoNotHaveAnAccount,
+                      endText: kSignUp,
                       onPress: () {
-                        navigatePushReplacementMethod(context, SignInScreen.id);
+                        navigatePushReplacementMethod(context, SignUpScreen.id);
                       },
                     ),
                   ),
@@ -84,12 +82,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  _signUpButton(BuildContext context) => isSignup
+  _signInButton(BuildContext context) => isSignIn
       ? customCircularIndicator()
       : CustomButton(
-          title: kSignUp,
+          title: kSignIn,
           onPress: () async {
-            await _saveDetailsToFirebaseFirestore();
+            await _signInWithEmailPassword();
             if (FirebaseAuth.instance.currentUser?.email != null) {
               navigatePushReplacementMethod(context, HomePage.id);
             }
@@ -103,7 +101,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
         controller: _passwordController,
         focusNode: _passwordFocusNode,
         onSubmit: (String? value) {
-          onSubmittedUnFocusMethod(context, _passwordFocusNode);
+          onSubmittedUnFocusMethod(
+            context,
+            _passwordFocusNode,
+          );
         },
       );
 
@@ -122,52 +123,42 @@ class _SignUpScreenState extends State<SignUpScreen> {
         },
       );
 
-  TextFormFieldContainer _userNameTextField(BuildContext context) =>
-      TextFormFieldContainer(
-        label: kUsername,
-        inputType: TextInputType.text,
-        controller: _userNameController,
-        focusNode: _userNameFocusNode,
-        onSubmit: (String? value) {
-          onSubmittedFocusMethod(
-            context,
-            _userNameFocusNode,
-            _emailFocusNode,
-          );
+  GestureDetector _forgotPasswordWidget() => GestureDetector(
+        onTap: () {
+          navigatePushNamedMethod(context, ForgotPasswordScreen.id);
         },
+        child: Align(
+          alignment: Alignment.topRight,
+          child: Text(
+            kForgotPassword,
+            style: kForgotPasswordTextStyle,
+          ),
+        ),
       );
 
-  _saveDetailsToFirebaseFirestore() async {
-    var emailValid = RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  _signInWithEmailPassword() async {
+    FirebaseService firebaseService = FirebaseService();
 
-    if (_userNameController.text.trim().isNotEmpty &&
-        _passwordController.text.trim().isNotEmpty &&
-        _emailController.text.trim().isNotEmpty &&
-        emailValid.hasMatch(_emailController.text)) {
-      FirebaseService firebaseService = FirebaseService();
-      await firebaseService.signUpWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
+    if (_emailController.text.trim().isNotEmpty &&
+        _passwordController.text.trim().isNotEmpty) {
       setState(() {
-        isSignup = true;
+        isSignIn = true;
       });
-
       try {
-        await _fireStore.collection("Trainers").doc(_emailController.text).set({
-          'userName': _userNameController.text,
-          'email': _emailController.text,
-          'password': _passwordController.text,
-        });
+        await firebaseService.signInWithEmailAndPassword(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
+        showMessage("Login Successfully!");
         setState(() {
-          isSignup = false;
+          isSignIn = false;
         });
-        showMessage("Sign up Successfully!");
-        _userNameController.clear();
         _emailController.clear();
         _passwordController.clear();
       } catch (e) {
+        setState(() {
+          isSignIn = false;
+        });
         showMessage("Please enter correct details!");
       }
     } else {

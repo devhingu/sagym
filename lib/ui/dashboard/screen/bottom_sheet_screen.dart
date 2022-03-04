@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gym/constants/constants.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
-import 'package:gym/ui/dashboard/screens/addexpenses/add_expenses.dart';
+import 'package:gym/ui/dashboard/screen/addexpenses/add_expenses.dart';
 import 'package:gym/constants/methods/reusable_methods.dart';
 import 'package:intl/intl.dart';
 
@@ -42,23 +42,9 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          bottomSheetCard(
+          _bottomSheetCard(
             title: kSendReminder,
-            onPress: () {
-              showModalBottomSheet(
-                context: context,
-                elevation: 15.0,
-                isScrollControlled: true,
-                barrierColor: Colors.black.withAlpha(1),
-                builder: (context) => Container(
-                  margin: kAllSideBigPadding,
-                  padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                  ),
-                  child: _bottomCardDataColumn(context),
-                ),
-              );
-            },
+            onPress: _sendReminderBottomSheet,
           ),
           heightSizedBox(height: 20.0),
           Row(
@@ -66,13 +52,13 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              bottomSheetCard(
+              _bottomSheetCard(
                 title: kAddMember,
                 onPress: () {
                   navigatePopAndPushNamedMethod(context, AddMemberScreen.id);
                 },
               ),
-              bottomSheetCard(
+              _bottomSheetCard(
                 title: kAddExpense,
                 onPress: () {
                   navigatePopAndPushNamedMethod(context, AddExpensesScreen.id);
@@ -81,6 +67,22 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  _sendReminderBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      elevation: 15.0,
+      isScrollControlled: true,
+      barrierColor: Colors.black.withAlpha(1),
+      builder: (context) => Container(
+        margin: kAllSideBigPadding,
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: _bottomCardDataColumn(context),
       ),
     );
   }
@@ -116,7 +118,7 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(10.0),
                       border: textFormFieldInputBorder(),
-                      hintText: "Message",
+                      hintText: kMessage,
                       labelStyle: kTextFormFieldLabelTextStyle,
                       focusedBorder: textFormFieldInputBorder(),
                     ),
@@ -132,7 +134,7 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
               ),
       );
 
-  GestureDetector bottomSheetCard(
+  GestureDetector _bottomSheetCard(
           {required VoidCallback onPress, required String title}) =>
       GestureDetector(
         onTap: onPress,
@@ -153,7 +155,7 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
         onTap: () => _selectStartDate(context),
         child: AbsorbPointer(
           child: TextFormFieldContainer(
-              label: "Start Date",
+              label: kStartDate,
               inputType: TextInputType.text,
               controller: _startDateController,
               focusNode: _startDateFocusNode,
@@ -165,7 +167,7 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
         onTap: () => _selectedEndDate(context),
         child: AbsorbPointer(
           child: TextFormFieldContainer(
-              label: "End Date",
+              label: kEndDate,
               inputType: TextInputType.text,
               controller: _endDateController,
               focusNode: _endDateFocusNode,

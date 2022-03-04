@@ -3,10 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/service/firebase_auth_service.dart';
-import 'package:gym/ui/auth/screens/changepassword/change_password.dart';
-import 'package:gym/ui/auth/screens/login/sign_in_screen.dart';
+import 'package:gym/ui/auth/screen/changepassword/change_password.dart';
+import 'package:gym/ui/auth/screen/login/sign_in_screen.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
-import 'package:gym/ui/dashboard/screens/addexpenses/gym_expenses_list.dart';
+import 'package:gym/ui/dashboard/screen/addexpenses/gym_expenses_list.dart';
 import 'package:gym/constants/methods/reusable_methods.dart';
 import '../../../widgets/profile/user_profile_list_tile.dart';
 import '../constants/user_profile_constants.dart';
@@ -165,16 +165,23 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         backgroundImage: AssetImage(kAvatarImagePath),
       );
 
-  Text _emailText() => Text(
-        email,
-        style: kUserEmailTextStyle,
+  SizedBox _emailText() => SizedBox(
+        width: 210.0,
+        child: FittedBox(
+          child: Text(
+            email,
+            style: kUserEmailTextStyle,
+          ),
+        ),
       );
 
   SizedBox _userNameText() => SizedBox(
-        width: 220.0,
-        child: Text(
-          userName,
-          style: kUserNameTextStyle,
+        width: 190.0,
+        child: FittedBox(
+          child: Text(
+            userName,
+            style: kUserNameTextStyle,
+          ),
         ),
       );
 }

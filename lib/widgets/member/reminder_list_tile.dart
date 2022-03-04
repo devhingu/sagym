@@ -22,7 +22,11 @@ class ReminderListTile extends StatelessWidget {
       margin: kAllSideSmallPadding,
       padding: kAllSidePadding,
       decoration: kCardBoxDecoration,
-      child: Column(
+      child: _reminderDataColumn(),
+    );
+  }
+
+  Column _reminderDataColumn() => Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -49,7 +53,5 @@ class ReminderListTile extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
+      );
 }

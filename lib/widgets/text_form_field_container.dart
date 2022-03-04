@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
 import 'package:gym/constants/methods/reusable_methods.dart';
 

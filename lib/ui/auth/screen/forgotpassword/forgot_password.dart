@@ -65,21 +65,21 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   Widget _submitButton() => isSubmit
       ? customCircularIndicator()
-      : CustomButton(
-          title: kSubmit,
-          onPress: () async {
-            if (_emailController.text.trim().isNotEmpty) {
-              setState(() {
-                isSubmit = true;
-              });
-              await FirebaseAuth.instance
-                  .sendPasswordResetEmail(email: _emailController.text.trim());
-              setState(() {
-                isSubmit = false;
-              });
-              showMessage("Email sent on your mail id!");
-            }
-          });
+      : CustomButton(title: kSubmit, onPress: _forgotPassword);
+
+  _forgotPassword() async {
+    if (_emailController.text.trim().isNotEmpty) {
+      setState(() {
+        isSubmit = true;
+      });
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: _emailController.text.trim());
+      setState(() {
+        isSubmit = false;
+      });
+      showMessage("Email sent on your mail id!");
+    }
+  }
 
   TextFormFieldContainer _emailTextField(BuildContext context) =>
       TextFormFieldContainer(

@@ -3,19 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/provider/member_provider.dart';
-import 'package:gym/ui/account/screens/user_profile_screen.dart';
+import 'package:gym/ui/account/screen/user_profile_screen.dart';
 import 'package:gym/ui/auth/constants/auth_constants.dart';
-import 'package:gym/ui/auth/screens/changepassword/change_password.dart';
-import 'package:gym/ui/auth/screens/forgotpassword/forgot_password.dart';
-import 'package:gym/ui/auth/screens/login/sign_in_screen.dart';
-import 'package:gym/ui/auth/screens/signup/sign_up_screen.dart';
-import 'package:gym/ui/dashboard/screens/addexpenses/add_expenses.dart';
-import 'package:gym/ui/dashboard/screens/addexpenses/gym_expenses_list.dart';
-import 'package:gym/ui/dashboard/screens/addmember/add_member_screen.dart';
-import 'package:gym/ui/dashboard/screens/home_page.dart';
-import 'package:gym/ui/dashboard/screens/home_screen.dart';
-import 'package:gym/ui/splash/screens/splash_screen.dart';
-import 'package:gym/ui/welcome/screens/welcome_screen.dart';
+import 'package:gym/ui/auth/screen/changepassword/change_password.dart';
+import 'package:gym/ui/auth/screen/forgotpassword/forgot_password.dart';
+import 'package:gym/ui/auth/screen/login/sign_in_screen.dart';
+import 'package:gym/ui/auth/screen/signup/sign_up_screen.dart';
+import 'package:gym/ui/dashboard/screen/addexpenses/add_expenses.dart';
+import 'package:gym/ui/dashboard/screen/addexpenses/gym_expenses_list.dart';
+import 'package:gym/ui/dashboard/screen/addmember/add_member_screen.dart';
+import 'package:gym/ui/dashboard/screen/home_page.dart';
+import 'package:gym/ui/dashboard/screen/home_screen.dart';
+import 'package:gym/ui/location/screen/location_screen.dart';
+import 'package:gym/ui/member/screen/member_list.dart';
+import 'package:gym/ui/member/screen/reminder_screen.dart';
+import 'package:gym/ui/splash/screen/splash_screen.dart';
+import 'package:gym/ui/welcome/screen/welcome_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -62,6 +65,9 @@ class MyApp extends StatelessWidget {
           UserProfileScreen.id: (context) => const UserProfileScreen(),
           ChangePasswordScreen.id: (context) => const ChangePasswordScreen(),
           GymExpensesList.id: (context) => const GymExpensesList(),
+          ReminderScreen.id: (context) => const ReminderScreen(),
+          MemberListScreen.id: (context) => const MemberListScreen(),
+          LocationScreen.id: (context) => const LocationScreen(),
         },
       ),
     );

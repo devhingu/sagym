@@ -8,6 +8,7 @@ import 'package:gym/constants/methods/reusable_methods.dart';
 import 'package:gym/widgets/text_form_field_container.dart';
 
 import '../../../../widgets/drop_down_text_field.dart';
+import '../../../../widgets/elevated_custom_button.dart';
 
 class AddExpensesScreen extends StatefulWidget {
   static const String id = "add_expenses";
@@ -117,21 +118,11 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
 
   Align _bottomButton(BuildContext context) => Align(
         alignment: Alignment.center,
-        child: ElevatedButton(
-          style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all(kFloatingActionButtonColor),
-          ),
-          onPressed: () async {
+        child: ElevatedCustomButton(
+          title: kAddExpense,
+          onPress: () async {
             await _saveExpenseDetailToFirestore();
           },
-          child: Padding(
-            padding: kAllSideSmallPadding,
-            child: Text(
-              kAddExpense,
-              style: kCustomButtonTextStyle,
-            ),
-          ),
         ),
       );
 
@@ -150,7 +141,7 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
   DropDownTextField _gymAccessoriesTypeTextField() => DropDownTextField(
         list: accessoriesTypeList,
         value: selectedAccessoriesType,
-        title: "Accessories Type",
+        title: kAccessoriesType,
         focusNode: _gymAccessoriesTypeFocusNode,
         onChanged: (newValue) {
           setState(() {

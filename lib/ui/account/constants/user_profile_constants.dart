@@ -9,7 +9,6 @@ const String kLogout = "Logout";
 const String kGetHelp = "Get Help";
 const String kGiveUsFeedback = "Give Us Feedback";
 const String kGymExpenses = "Gym Expenses";
-const String kAddedBy = "Added By ";
 
 //icons
 const kPasswordIcon =Icons.password;

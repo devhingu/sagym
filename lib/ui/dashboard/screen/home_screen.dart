@@ -49,14 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    getCurrentUser();
-    getCurrentDate();
-    getCurrentData();
-  }
-
   Future getCurrentUser() async {
     if (user?.displayName == null || user?.displayName == "") {
       final snapshots =
@@ -75,6 +67,14 @@ class _HomeScreenState extends State<HomeScreen> {
         debugPrint(e.toString());
       }
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+    getCurrentDate();
+    getCurrentData();
   }
 
   @override
@@ -124,9 +124,13 @@ class _HomeScreenState extends State<HomeScreen> {
         width: double.infinity,
         margin: const EdgeInsets.only(top: 20.0),
         decoration: kCardBoxDecoration,
-        child: CardDataColumn(
-          title: kDueUsers,
-          titleValue: Provider.of<MemberData>(context).dueUserCounts.toString(),
+        child: Consumer<MemberData>(
+          builder: (BuildContext context, memberData, Widget? child) {
+            return CardDataColumn(
+              title: kDueUsers,
+              titleValue: memberData.dueUserCounts.toString(),
+            );
+          },
         ),
       );
 
@@ -144,20 +148,26 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       );
 
-  CustomCard _activeInactiveCard() => CustomCard(
-        title1: kActive,
-        titleValue1: Provider.of<MemberData>(context).activeCounts.toString(),
-        title2: kInactive,
-        titleValue2: Provider.of<MemberData>(context).inActiveCounts.toString(),
-      );
+  Consumer _activeInactiveCard() => Consumer<MemberData>(
+          builder: (BuildContext context, memberData, Widget? child) {
+        return CustomCard(
+          title1: kActive,
+          titleValue1: memberData.activeCounts.toString(),
+          title2: kInactive,
+          titleValue2: memberData.inActiveCounts.toString(),
+        );
+      });
 
-  CustomCard _receivedDueCard() => CustomCard(
-        title1: kReceived,
-        titleValue1: NumberFormat.compact()
-            .format(Provider.of<MemberData>(context).receivedAmounts),
-        title2: kDue,
-        titleValue2: NumberFormat.compact()
-            .format(Provider.of<MemberData>(context).dueAmounts),
+  Consumer _receivedDueCard() => Consumer<MemberData>(
+        builder: (BuildContext context, memberData, Widget? child) {
+          return CustomCard(
+            title1: kReceived,
+            titleValue1:
+                NumberFormat.compact().format(memberData.receivedAmounts),
+            title2: kDue,
+            titleValue2: NumberFormat.compact().format(memberData.dueAmounts),
+          );
+        },
       );
 
   Container _backgroundContainer() => Container(
@@ -171,9 +181,13 @@ class _HomeScreenState extends State<HomeScreen> {
             _homeCustomAppBar(),
             Expanded(child: _totalMembersWidget()),
             Expanded(
-              child: Text(
-                Provider.of<MemberData>(context).totalUsers.toString(),
-                style: kMemberCountTextStyle,
+              child: Consumer<MemberData>(
+                builder: (BuildContext context, memberData, Widget? child) {
+                  return Text(
+                    memberData.totalUsers.toString(),
+                    style: kMemberCountTextStyle,
+                  );
+                },
               ),
             ),
             Expanded(
@@ -203,12 +217,18 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: Text(
-                "$kWelcome $userName",
-                style: kAppBarTextStyle.copyWith(fontSize: 22.0),
-                overflow: TextOverflow.ellipsis,
+              child: SizedBox(
+                width: 180.0,
+                child: FittedBox(
+                  child: Text(
+                    "$kWelcome $userName",
+                    style: kAppBarTextStyle.copyWith(fontSize: 22.0),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ),
             ),
+            widthSizedBox(width: 10.0),
             imagePath.isEmpty
                 ? const CircleAvatar(
                     radius: 20.0,

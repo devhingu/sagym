@@ -6,13 +6,15 @@ import 'package:gym/constants/constants.dart';
 import 'package:gym/provider/member_provider.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
 import 'package:gym/ui/member/constants/member_constants.dart';
-import 'package:gym/ui/member/screens/member_detail_screen.dart';
-import 'package:gym/ui/member/screens/reminder_screen.dart';
+import 'package:gym/ui/member/screen/member_detail_screen.dart';
+import 'package:gym/ui/member/screen/reminder_screen.dart';
 import 'package:gym/constants/methods/reusable_methods.dart';
 import 'package:provider/provider.dart';
 import '../../../widgets/member/member_tile.dart';
 
 class MemberListScreen extends StatefulWidget {
+  static const String id = "member_list_screen";
+
   const MemberListScreen({Key? key}) : super(key: key);
 
   @override
@@ -27,7 +29,6 @@ class _MemberListScreenState extends State<MemberListScreen> {
   late Future resultsLoaded;
   List _allResults = [];
   List _resultsList = [];
-
   String personName = "";
 
   getMemberListData() async {
@@ -89,29 +90,12 @@ class _MemberListScreenState extends State<MemberListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text(kMemberEntries),
-        elevation: 0.0,
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ReminderScreen(),
-                ),
-              );
-            },
-            icon: const Icon(Icons.notifications),
-          ),
-        ],
-      ),
+      appBar: _appBar(context),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
-
-             await getMemberListData();
-             await Future.delayed(const Duration(seconds: 2));
+            await getMemberListData();
+            await Future.delayed(const Duration(seconds: 2));
           },
           child: Column(
             children: [
@@ -132,6 +116,19 @@ class _MemberListScreenState extends State<MemberListScreen> {
       ),
     );
   }
+
+  AppBar _appBar(BuildContext context) => AppBar(
+        title: Text(kMemberEntries),
+        elevation: 0.0,
+        actions: [
+          IconButton(
+            onPressed: () {
+              navigatePushNamedMethod(context, ReminderScreen.id);
+            },
+            icon: const Icon(Icons.notifications),
+          ),
+        ],
+      );
 
   Widget _memberStreamBuilder() =>
       NotificationListener<OverscrollIndicatorNotification>(

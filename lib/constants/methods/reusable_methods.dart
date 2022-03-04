@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gym/constants/constants.dart';
 
 import '../color_constants.dart';
 
@@ -40,7 +41,7 @@ OutlineInputBorder textFormFieldInputBorder() {
 
 Widget customCircularIndicator() => const Center(
       child: Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: kAllSideSmallPadding,
         child: CircularProgressIndicator(
           color: kMainColor,
         ),

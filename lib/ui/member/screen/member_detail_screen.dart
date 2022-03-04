@@ -30,63 +30,9 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
                 decoration: kMemberDetailBoxDecoration,
                 padding: kAllSideBigPadding,
                 width: double.infinity,
-                // height: MediaQuery.of(context).size.height,
                 margin: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.25),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _userMainDetailRow(),
-                    _divider(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        MemberDetailData(
-                          title: kHeight,
-                          titleValue: widget.doc[paramsHeight],
-                        ),
-                        MemberDetailData(
-                          title: kWeight,
-                          titleValue: widget.doc[paramsWeight],
-                        ),
-                        MemberDetailData(
-                          title: kDOB,
-                          titleValue: widget.doc[paramsDob],
-                        ),
-                      ],
-                    ),
-                    _divider(),
-                    MemberDetailData(
-                      title: kAddress,
-                      titleValue: widget.doc[paramsAddress],
-                    ),
-                    _divider(),
-                    MemberDetailData(
-                      title: kBatch,
-                      titleValue: widget.doc[paramsBatch],
-                    ),
-                    _divider(),
-                    MemberDetailData(
-                      title: kMembershipPlan,
-                      titleValue: widget.doc[paramsMemberShipPlan],
-                    ),
-                    _divider(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        MemberDetailData(
-                          title: kAmount,
-                          titleValue: widget.doc["receivedAmount"],
-                        ),
-                        MemberDetailData(
-                          title: kPaymentType,
-                          titleValue: widget.doc[paramsPaymentType],
-                        ),
-                      ],
-                    ),
-                    _divider(),
-                  ],
-                ),
+                child: _memberDataColumn(),
               ),
             ),
           ],
@@ -94,6 +40,61 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
       ),
     );
   }
+
+  Column _memberDataColumn() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _userMainDetailRow(),
+          _divider(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              MemberDetailData(
+                title: kHeight,
+                titleValue: widget.doc[paramsHeight],
+              ),
+              MemberDetailData(
+                title: kWeight,
+                titleValue: widget.doc[paramsWeight],
+              ),
+              MemberDetailData(
+                title: kDOB,
+                titleValue: widget.doc[paramsDob],
+              ),
+            ],
+          ),
+          _divider(),
+          MemberDetailData(
+            title: kAddress,
+            titleValue: widget.doc[paramsAddress],
+          ),
+          _divider(),
+          MemberDetailData(
+            title: kBatch,
+            titleValue: widget.doc[paramsBatch],
+          ),
+          _divider(),
+          MemberDetailData(
+            title: kMembershipPlan,
+            titleValue: widget.doc[paramsMemberShipPlan],
+          ),
+          _divider(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              MemberDetailData(
+                title: kAmount,
+                titleValue: widget.doc[paramsReceivedAmount],
+              ),
+              MemberDetailData(
+                title: kPaymentType,
+                titleValue: widget.doc[paramsPaymentType],
+              ),
+            ],
+          ),
+          _divider(),
+        ],
+      );
 
   Row _userMainDetailRow() => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

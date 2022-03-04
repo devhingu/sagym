@@ -21,10 +21,12 @@ String paramsBatch = "batch";
 String paramsMemberShipPlan = "memberShipPlan";
 String paramsPayment = "paymentStatus";
 String paramsPaymentType = "paymentType";
-String paramsAmount = "amount";
+String paramsReceivedAmount = "receivedAmount";
+String paramsDueAmount = "dueAmount";
 String paramsStaffName = "staffName";
 String paramsUserName = "userName";
 String paramsStatus = "status";
+
 
 //icons
 const kActiveCircleIcon = Icons.album_outlined;

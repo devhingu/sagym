@@ -5,7 +5,7 @@ import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
 import 'package:gym/ui/auth/constants/auth_constants.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
-import 'package:gym/ui/dashboard/screens/addmember/add_member_payment_screen.dart';
+import 'package:gym/ui/dashboard/screen/addmember/add_member_payment_screen.dart';
 import 'package:gym/ui/member/constants/member_constants.dart';
 import 'package:gym/widgets/drop_down_text_field.dart';
 import 'package:gym/constants/methods/reusable_methods.dart';
@@ -91,72 +91,7 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                   decoration: kCardBoxDecoration,
                   child: Padding(
                     padding: kAllSidePadding,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          kPersonalDetails,
-                          style: kTextFormFieldTextStyle,
-                        ),
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: _firstNameTextField(),
-                              ),
-                              widthSizedBox(width: 10.0),
-                              Expanded(
-                                child: _lastNameTextField(),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(child: _emailTextField()),
-                        Expanded(
-                          child: _mobileNumberTextField(),
-                        ),
-                        Expanded(
-                          child: _addressTextField(),
-                        ),
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: _dobTextField(),
-                              ),
-                              widthSizedBox(width: 10.0),
-                              Expanded(
-                                flex: 2,
-                                child: _heightTextField(),
-                              ),
-                              widthSizedBox(width: 10.0),
-                              Expanded(
-                                flex: 2,
-                                child: _weightTextField(),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: _batchTextField(),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: _activeRadioTile(),
-                            ),
-                            Expanded(
-                              child: _inactiveRadioTile(),
-                            ),
-                          ],
-                        ),
-                        Align(
-                            alignment: Alignment.bottomRight,
-                            child: _bottomNextButton(context, size)),
-                      ],
-                    ),
+                    child: _personalDetailsColumn(context, size),
                   ),
                 ),
               ),
@@ -166,6 +101,73 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
       ),
     );
   }
+
+  Column _personalDetailsColumn(BuildContext context, Size size) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            kPersonalDetails,
+            style: kTextFormFieldTextStyle,
+          ),
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                  child: _firstNameTextField(),
+                ),
+                widthSizedBox(width: 10.0),
+                Expanded(
+                  child: _lastNameTextField(),
+                ),
+              ],
+            ),
+          ),
+          Expanded(child: _emailTextField()),
+          Expanded(
+            child: _mobileNumberTextField(),
+          ),
+          Expanded(
+            child: _addressTextField(),
+          ),
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: _dobTextField(),
+                ),
+                widthSizedBox(width: 10.0),
+                Expanded(
+                  flex: 2,
+                  child: _heightTextField(),
+                ),
+                widthSizedBox(width: 10.0),
+                Expanded(
+                  flex: 2,
+                  child: _weightTextField(),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: _batchTextField(),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: _activeRadioTile(),
+              ),
+              Expanded(
+                child: _inactiveRadioTile(),
+              ),
+            ],
+          ),
+          Align(
+              alignment: Alignment.bottomRight,
+              child: _bottomNextButton(context, size)),
+        ],
+      );
 
   Row _inactiveRadioTile() => Row(
         children: [
