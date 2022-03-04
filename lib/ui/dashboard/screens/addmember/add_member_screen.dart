@@ -8,7 +8,7 @@ import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
 import 'package:gym/ui/dashboard/screens/addmember/add_member_payment_screen.dart';
 import 'package:gym/ui/member/constants/member_constants.dart';
 import 'package:gym/widgets/drop_down_text_field.dart';
-import 'package:gym/widgets/reusable/reusable_methods.dart';
+import 'package:gym/constants/methods/reusable_methods.dart';
 import 'package:gym/widgets/text_form_field_container.dart';
 
 class AddMemberScreen extends StatefulWidget {
@@ -199,16 +199,7 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
 
   GestureDetector _bottomNextButton(BuildContext context, size) =>
       GestureDetector(
-        onTap: () async {
-          await _saveMemberDetailsToFirestore();
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  AddMemberPaymentScreen(email: _emailController.text),
-            ),
-          );
-        },
+        onTap: _saveMemberDetailsToFirestore,
         child: Container(
           height: size.height * 0.06,
           width: size.height * 0.06,
@@ -366,33 +357,44 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
         _heightController.text.trim().isNotEmpty &&
         _weightController.text.trim().isNotEmpty &&
         _batchController.text.trim().isNotEmpty) {
-      await _fireStore
-          .collection("Trainers")
-          .doc(kCurrentUser?.email)
-          .collection("memberDetails")
-          .doc(_emailController.text)
-          .set({
-        'firstName': _firstNameController.text,
-        'lastName': _lastNameController.text,
-        'email': _emailController.text,
-        'phone': _phoneController.text,
-        'address': _addressController.text,
-        'dob': _dobController.text,
-        'height': "${_heightController.text}cm",
-        'weight': "${_weightController.text}kg",
-        'batch': selectedBatch,
-        'status': _isActive == "active" ? true : false
-      });
+      try {
+        await _fireStore
+            .collection("Trainers")
+            .doc(kCurrentUser?.email)
+            .collection("memberDetails")
+            .doc(_emailController.text)
+            .set({
+          'firstName': _firstNameController.text,
+          'lastName': _lastNameController.text,
+          'email': _emailController.text,
+          'phone': _phoneController.text,
+          'address': _addressController.text,
+          'dob': _dobController.text,
+          'height': "${_heightController.text}cm",
+          'weight': "${_weightController.text}kg",
+          'batch': selectedBatch,
+          'status': _isActive == "active" ? true : false
+        });
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                AddMemberPaymentScreen(email: _emailController.text),
+          ),
+        );
+        _firstNameController.clear();
+        _lastNameController.clear();
+        _phoneController.clear();
+        _addressController.clear();
+        _dobController.clear();
+        _heightController.clear();
+        _weightController.clear();
+        _batchController.clear();
+      } catch (e) {
+        showMessage("Please enter correct details!");
+      }
     } else {
-      debugPrint("failed");
+      showMessage("Please Enter Details!");
     }
-    _firstNameController.clear();
-    _lastNameController.clear();
-    _phoneController.clear();
-    _addressController.clear();
-    _dobController.clear();
-    _heightController.clear();
-    _weightController.clear();
-    _batchController.clear();
   }
 }

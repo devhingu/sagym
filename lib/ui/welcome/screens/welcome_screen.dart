@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
-import 'package:gym/ui/auth/screens/login/sign_in_screen.dart';
 import 'package:gym/ui/auth/screens/signup/sign_up_screen.dart';
 import 'package:gym/widgets/custom_button.dart';
-import 'package:gym/widgets/dashboard/welcome_top_image_container.dart';
-import 'package:gym/widgets/reusable/reusable_methods.dart';
+import 'package:gym/widgets/welcome/welcome_top_image_container.dart';
+import 'package:gym/constants/methods/reusable_methods.dart';
 
 import '../constants/welcome_constants.dart';
 
@@ -41,40 +40,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Container(
-                alignment: Alignment.centerRight,
-                padding: kAllSideSmallPadding,
-                child: TextButton(
-                  onPressed: () {
-                    _pageController.animateToPage(
-                      _numPages - 1,
-                      duration: kDuration,
-                      curve: Curves.ease,
-                    );
-                  },
-                  child:  _currentPage == _numPages - 1 ? const Text('') : Text(
-                    kSkip,
-                    style: kLabelTextStyle,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: size.height * 0.65,
-                child: PageView(
-                  physics: const BouncingScrollPhysics(),
-                  controller: _pageController,
-                  onPageChanged: (int page) {
-                    setState(() {
-                      _currentPage = page;
-                    });
-                  },
-                  children: [
-                    _imageContainer1(),
-                    _imageContainer2(),
-                    _imageContainer3(),
-                  ],
-                ),
-              ),
+              _topSkipButton(),
+              _pageView(size),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: _buildPageIndicator(),
@@ -98,6 +65,44 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       ),
     );
   }
+
+  SizedBox _pageView(Size size) => SizedBox(
+        height: size.height * 0.65,
+        child: PageView(
+          physics: const BouncingScrollPhysics(),
+          controller: _pageController,
+          onPageChanged: (int page) {
+            setState(() {
+              _currentPage = page;
+            });
+          },
+          children: [
+            _imageContainer1(),
+            _imageContainer2(),
+            _imageContainer3(),
+          ],
+        ),
+      );
+
+  Container _topSkipButton() => Container(
+        alignment: Alignment.centerRight,
+        padding: kAllSideSmallPadding,
+        child: TextButton(
+          onPressed: () {
+            _pageController.animateToPage(
+              _numPages - 1,
+              duration: kDuration,
+              curve: Curves.ease,
+            );
+          },
+          child: _currentPage == _numPages - 1
+              ? const Text('')
+              : Text(
+                  kSkip,
+                  style: kLabelTextStyle,
+                ),
+        ),
+      );
 
   Expanded _bottomNextButton() => Expanded(
         child: Align(

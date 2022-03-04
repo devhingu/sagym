@@ -1,10 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-import '../../constants/color_constants.dart';
-import '../../provider/home_provider.dart';
+import '../color_constants.dart';
 
 SizedBox widthSizedBox({required double width}) => SizedBox(
       width: width,
@@ -41,10 +38,22 @@ OutlineInputBorder textFormFieldInputBorder() {
   );
 }
 
-SnackBar showSnackBar({required String content}) {
-  return SnackBar(
-    content: Text(content),
-    duration: const Duration(seconds: 1),
-    behavior: SnackBarBehavior.floating,
+Widget customCircularIndicator() => const Center(
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: CircularProgressIndicator(
+          color: kMainColor,
+        ),
+      ),
+    );
+
+void showMessage(String value) {
+  Fluttertoast.showToast(
+      msg: value,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: kMainColor,
+      textColor: Colors.white,
+      fontSize: 16.0
   );
 }

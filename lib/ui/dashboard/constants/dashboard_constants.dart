@@ -37,6 +37,7 @@ String kAccessoriesType = "Accessories Type";
 String kExpense = "Expense";
 String kAddedBy = "Added By";
 String kSendReminder = "Send Reminder";
+String kExpensesDetails = "Expenses Details";
 
 //params
 String paramsAccessoriesName = "accessoriesName";

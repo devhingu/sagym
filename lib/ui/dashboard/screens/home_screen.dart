@@ -3,14 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
-import 'package:gym/provider/home_provider.dart';
+import 'package:gym/provider/member_provider.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
 import 'package:gym/widgets/dashboard/custom_card.dart';
 import 'package:gym/widgets/dashboard/custom_data_column.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../../widgets/reusable/reusable_methods.dart';
+import '../../../constants/methods/reusable_methods.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = "home_screen";

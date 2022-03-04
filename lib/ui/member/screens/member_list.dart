@@ -3,12 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
-import 'package:gym/provider/home_provider.dart';
+import 'package:gym/provider/member_provider.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
 import 'package:gym/ui/member/constants/member_constants.dart';
 import 'package:gym/ui/member/screens/member_detail_screen.dart';
 import 'package:gym/ui/member/screens/reminder_screen.dart';
-import 'package:gym/widgets/reusable/reusable_methods.dart';
+import 'package:gym/constants/methods/reusable_methods.dart';
 import 'package:provider/provider.dart';
 import '../../../widgets/member/member_tile.dart';
 
@@ -63,8 +63,9 @@ class _MemberListScreenState extends State<MemberListScreen> {
     var showResults = [];
     if (_searchController.text != "") {
       for (var element in List.from(_allResults)) {
-        personName =
-            "${element["firstName"]} ${element["lastName"]}".trim().toLowerCase();
+        personName = "${element["firstName"]} ${element["lastName"]}"
+            .trim()
+            .toLowerCase();
         if (personName.contains(_searchController.text.toLowerCase())) {
           showResults.add(element);
         }
@@ -95,9 +96,11 @@ class _MemberListScreenState extends State<MemberListScreen> {
           IconButton(
             onPressed: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ReminderScreen(),),);
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ReminderScreen(),
+                ),
+              );
             },
             icon: const Icon(Icons.notifications),
           ),
@@ -106,7 +109,9 @@ class _MemberListScreenState extends State<MemberListScreen> {
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
-            await Future.delayed(const Duration(seconds: 2));
+
+             await getMemberListData();
+             await Future.delayed(const Duration(seconds: 2));
           },
           child: Column(
             children: [
@@ -143,35 +148,6 @@ class _MemberListScreenState extends State<MemberListScreen> {
           ),
         ),
       );
-
-  /*StreamBuilder<QuerySnapshot>(
-        stream: _fireStore
-            .collection("Trainers")
-            .doc(kCurrentUser?.email)
-            .collection("memberDetails")
-            .snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(
-                color: kBlackColor,
-              ),
-            );
-          }
-
-          return Flexible(
-            child: ListView.builder(
-              itemCount: snapshot.data?.docs.length,
-              itemBuilder: (ctx, index) {
-                final doc = snapshot.data?.docs[index];
-
-                userName = "${doc![paramsFirstName]} ${doc[paramsLastName]}";
-                return _memberListTile(doc, context);
-              },
-            ),
-          );
-        },
-      );*/
 
   MemberTile _memberListTile(dynamic doc, BuildContext context) => MemberTile(
         onPress: () {

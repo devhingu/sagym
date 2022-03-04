@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -58,7 +57,6 @@ class FirebaseService {
     final res = await fb.logIn(permissions: [
       FacebookPermission.publicProfile,
       FacebookPermission.email,
-      //FacebookPermission.userFriends,
     ]);
 
     switch (res.status) {
@@ -68,9 +66,6 @@ class FirebaseService {
             FacebookAuthProvider.credential(accessToken!.token);
         final result =
             await FirebaseAuth.instance.signInWithCredential(authCredential);
-
-        // final profile = await fb.getUserProfile();
-        // final email = await fb.getUserEmail();
 
         final kCurrentUser = _auth.currentUser;
         await _fireStore.collection("Trainers").doc(kCurrentUser?.email).set({

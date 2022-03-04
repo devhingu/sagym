@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gym/widgets/reusable/reusable_methods.dart';
+import 'package:gym/constants/methods/reusable_methods.dart';
 
-import '../constants/constants.dart';
-import '../ui/account/constants/user_profile_constants.dart';
-import '../ui/dashboard/constants/dashboard_constants.dart';
-import '../ui/member/constants/member_constants.dart';
+import '../../constants/constants.dart';
+import '../../ui/account/constants/user_profile_constants.dart';
+import '../../ui/dashboard/constants/dashboard_constants.dart';
+import '../../ui/member/constants/member_constants.dart';
 
 class ReminderListTile extends StatelessWidget {
   final String title;

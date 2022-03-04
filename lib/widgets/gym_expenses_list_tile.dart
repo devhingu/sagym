@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gym/widgets/reusable/reusable_methods.dart';
+import 'package:gym/constants/methods/reusable_methods.dart';
 
 import '../constants/constants.dart';
 import '../ui/account/constants/user_profile_constants.dart';

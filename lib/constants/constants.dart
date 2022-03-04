@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'color_constants.dart';
 
+//text styles
 const kAppTitleTextStyle = TextStyle(
   fontSize: 20.0,
   fontWeight: FontWeight.bold,

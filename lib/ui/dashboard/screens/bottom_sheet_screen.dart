@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gym/constants/constants.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
 import 'package:gym/ui/dashboard/screens/addexpenses/add_expenses.dart';
-import 'package:gym/widgets/reusable/reusable_methods.dart';
+import 'package:gym/constants/methods/reusable_methods.dart';
 import 'package:intl/intl.dart';
 
 import '../../../widgets/elevated_custom_button.dart';
@@ -22,24 +22,12 @@ class BottomSheetScreen extends StatefulWidget {
 class _BottomSheetScreenState extends State<BottomSheetScreen> {
   final TextEditingController _messageController = TextEditingController();
   final TextEditingController _startDateController = TextEditingController();
+  final TextEditingController _endDateController = TextEditingController();
   final FocusNode _startDateFocusNode = FocusNode();
-  DateTime selectedDate = DateTime.now();
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(1901, 1),
-      lastDate: DateTime(2100),
-    );
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-        _startDateController.value = TextEditingValue(
-            text: "${picked.day}-${picked.month}-${picked.year}");
-      });
-    }
-  }
+  final FocusNode _endDateFocusNode = FocusNode();
+  DateTime selectedStartDate = DateTime.now();
+  DateTime selectedEndDate = DateTime.now();
+  bool isAdded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -98,49 +86,51 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
   }
 
   Widget _bottomCardDataColumn(BuildContext context) => SingleChildScrollView(
-    child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  kSendReminder,
-                  style: kAppTitleTextStyle,
-                ),
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
-            _dateTextField(),
-            heightSizedBox(height: 10.0),
-            TextFormField(
-              controller: _messageController,
-              maxLines: 6,
-              style: kTextFormFieldTextStyle,
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.all(10.0),
-                border: textFormFieldInputBorder(),
-                hintText: "Message",
-                labelStyle: kTextFormFieldLabelTextStyle,
-                focusedBorder: textFormFieldInputBorder(),
+        child: isAdded
+            ? customCircularIndicator()
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        kSendReminder,
+                        style: kAppTitleTextStyle,
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
+                  _startDateTextField(),
+                  _endDateTextField(),
+                  heightSizedBox(height: 10.0),
+                  TextFormField(
+                    controller: _messageController,
+                    maxLines: 6,
+                    style: kTextFormFieldTextStyle,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(10.0),
+                      border: textFormFieldInputBorder(),
+                      hintText: "Message",
+                      labelStyle: kTextFormFieldLabelTextStyle,
+                      focusedBorder: textFormFieldInputBorder(),
+                    ),
+                  ),
+                  heightSizedBox(height: 10.0),
+                  ElevatedCustomButton(
+                    onPress: () async {
+                      await _saveReminderDataToFirebase();
+                    },
+                    title: kSendReminder,
+                  ),
+                ],
               ),
-            ),
-            heightSizedBox(height: 10.0),
-            ElevatedCustomButton(
-              onPress: () async {
-                await _saveReminderDataToFirebase();
-                Navigator.pop(context);
-              },
-              title: kSendReminder,
-            ),
-          ],
-        ),
-  );
+      );
 
   GestureDetector bottomSheetCard(
           {required VoidCallback onPress, required String title}) =>
@@ -159,11 +149,11 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
         ),
       );
 
-  GestureDetector _dateTextField() => GestureDetector(
-        onTap: () => _selectDate(context),
+  GestureDetector _startDateTextField() => GestureDetector(
+        onTap: () => _selectStartDate(context),
         child: AbsorbPointer(
           child: TextFormFieldContainer(
-              label: "Select Date",
+              label: "Start Date",
               inputType: TextInputType.text,
               controller: _startDateController,
               focusNode: _startDateFocusNode,
@@ -171,32 +161,90 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
         ),
       );
 
+  GestureDetector _endDateTextField() => GestureDetector(
+        onTap: () => _selectedEndDate(context),
+        child: AbsorbPointer(
+          child: TextFormFieldContainer(
+              label: "End Date",
+              inputType: TextInputType.text,
+              controller: _endDateController,
+              focusNode: _endDateFocusNode,
+              onSubmit: (String? value) {}),
+        ),
+      );
+
+  Future<void> _selectStartDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedStartDate,
+      firstDate: DateTime(1901, 1),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null && picked != selectedStartDate) {
+      setState(() {
+        selectedStartDate = picked;
+        _startDateController.value = TextEditingValue(
+            text: "${picked.day}-${picked.month}-${picked.year}");
+      });
+    }
+  }
+
+  Future<void> _selectedEndDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedEndDate,
+      firstDate: DateTime(1901, 1),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null && picked != selectedEndDate) {
+      setState(() {
+        selectedEndDate = picked;
+        _endDateController.value = TextEditingValue(
+            text: "${picked.day}-${picked.month}-${picked.year}");
+      });
+    }
+  }
+
   _saveReminderDataToFirebase() async {
     final kCurrentUser = FirebaseAuth.instance.currentUser;
     final _fireStore = FirebaseFirestore.instance;
     String currentDate = DateFormat.yMEd().add_jm().format(DateTime.now());
 
     if (_messageController.text.trim().isNotEmpty) {
-      await _fireStore
-          .collection("Trainers")
-          .doc(kCurrentUser?.email)
-          .collection("reminders")
-          .add({
-        "reminder": _messageController.text,
-        "currentStamp": currentDate,
+      setState(() {
+        isAdded = true;
       });
-      await _addEventToCalender(_messageController.text);
-      Navigator.pop(context);
+      try {
+        await _fireStore
+            .collection("Trainers")
+            .doc(kCurrentUser?.email)
+            .collection("reminders")
+            .add({
+          "reminder": _messageController.text,
+          "currentStamp": currentDate,
+        });
+        setState(() {
+          isAdded = false;
+        });
+        showMessage("Reminder added successfully!");
+        Navigator.pop(context);
+        await _addEventToCalender(_messageController.text);
+        Navigator.pop(context);
+        _messageController.clear();
+      } catch (e) {
+        showMessage("Please enter correct details!");
+      }
+    } else {
+      showMessage("Please Enter Details!");
     }
-    _messageController.clear();
   }
 
   _addEventToCalender(description) {
     final Event event = Event(
       title: 'Due Reminder',
       description: description,
-      startDate: selectedDate,
-      endDate: selectedDate,
+      startDate: selectedStartDate,
+      endDate: selectedEndDate,
     );
     Add2Calendar.addEvent2Cal(event);
   }

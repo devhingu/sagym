@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
-import 'package:gym/widgets/reusable/reusable_methods.dart';
+import 'package:gym/constants/methods/reusable_methods.dart';
 
 class TextFormFieldContainer extends StatelessWidget {
   final String label;
@@ -36,7 +36,6 @@ class TextFormFieldContainer extends StatelessWidget {
           labelStyle: kTextFormFieldLabelTextStyle,
           focusedBorder: textFormFieldInputBorder(),
           floatingLabelBehavior: FloatingLabelBehavior.always,
-          //suffixIcon: label == "Password" ? Icon(CupertinoIcons.eye) : null,
         ),
         keyboardType: inputType,
       ),

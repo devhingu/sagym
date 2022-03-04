@@ -31,6 +31,7 @@ const kActiveCircleIcon = Icons.album_outlined;
 const kSearchIcon = Icons.search;
 const kPhoneIcon = Icons.phone;
 const kMailIcon = Icons.mail;
+const kCheckIcon =  Icons.check;
 
 //box decoration
 BoxDecoration kMemberDetailBoxDecoration = BoxDecoration(
@@ -64,4 +65,10 @@ const kMemberDetailNameTextStyle = TextStyle(
 const kMemberTileTextStyle = TextStyle(
   fontSize: 16.0,
   color: kDarkGreyColor,
+);
+
+const kMemberAddedTextStyle = TextStyle(
+  color: kWhiteColor,
+  fontSize: 30.0,
+  fontWeight: FontWeight.bold,
 );

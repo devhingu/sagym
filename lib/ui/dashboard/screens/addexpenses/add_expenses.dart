@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
-import 'package:gym/widgets/reusable/reusable_methods.dart';
+import 'package:gym/constants/methods/reusable_methods.dart';
 import 'package:gym/widgets/text_form_field_container.dart';
 
 import '../../../../widgets/drop_down_text_field.dart';
@@ -32,7 +32,7 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
   final FocusNode _gymAccessoriesExpenseFocusNode = FocusNode();
   final FocusNode _gymAccessoriesAddedByFocusNode = FocusNode();
   final _fireStore = FirebaseFirestore.instance;
-
+  bool isAdded = false;
   final kCurrentUser = FirebaseAuth.instance.currentUser;
   String imagePath = "";
   String selectedAccessoriesType = "Dumbbells";
@@ -66,11 +66,6 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
@@ -89,38 +84,27 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
                   decoration: kCardBoxDecoration,
                   child: Padding(
                     padding: kAllSidePadding,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Expenses Details",
-                              style: kTextFormFieldTextStyle,
-                            ),
-                            _gymAccessoriesNameTextField(),
-                            DropDownTextField(
-                              list: accessoriesTypeList,
-                              value: selectedAccessoriesType,
-                              title: "Accessories Type",
-                              focusNode: _gymAccessoriesTypeFocusNode,
-                              onChanged: (newValue) {
-                                setState(() {
-                                  selectedAccessoriesType = newValue.toString();
-
-                                  _gymAccessoriesTypeController.text =
-                                      newValue.toString();
-                                });
-                              },
-                            ),
-                            _gymAccessoriesExpenseTextField(),
-                            _gymAccessoriesAddedByTextField(),
-                          ],
-                        ),
-                        _bottomButton(context),
-                      ],
-                    ),
+                    child: isAdded
+                        ? customCircularIndicator()
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    kExpensesDetails,
+                                    style: kTextFormFieldTextStyle,
+                                  ),
+                                  _gymAccessoriesNameTextField(),
+                                  _gymAccessoriesTypeTextField(),
+                                  _gymAccessoriesExpenseTextField(),
+                                  _gymAccessoriesAddedByTextField(),
+                                ],
+                              ),
+                              _bottomButton(context),
+                            ],
+                          ),
                   ),
                 ),
               ),
@@ -140,7 +124,6 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
           ),
           onPressed: () async {
             await _saveExpenseDetailToFirestore();
-            Navigator.pop(context);
           },
           child: Padding(
             padding: kAllSideSmallPadding,
@@ -164,15 +147,16 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
         },
       );
 
-  TextFormFieldContainer _gymAccessoriesTypeTextField() =>
-      TextFormFieldContainer(
-        label: kAccessoriesType,
-        inputType: TextInputType.text,
-        controller: _gymAccessoriesTypeController,
+  DropDownTextField _gymAccessoriesTypeTextField() => DropDownTextField(
+        list: accessoriesTypeList,
+        value: selectedAccessoriesType,
+        title: "Accessories Type",
         focusNode: _gymAccessoriesTypeFocusNode,
-        onSubmit: (String? value) {
-          onSubmittedFocusMethod(context, _gymAccessoriesTypeFocusNode,
-              _gymAccessoriesExpenseFocusNode);
+        onChanged: (newValue) {
+          setState(() {
+            selectedAccessoriesType = newValue.toString();
+            _gymAccessoriesTypeController.text = newValue.toString();
+          });
         },
       );
 
@@ -235,30 +219,32 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
         _gymAccessoriesTypeController.text.trim().isNotEmpty &&
         _gymAccessoriesExpenseController.text.trim().isNotEmpty &&
         _gymAccessoriesAddedByController.text.trim().isNotEmpty) {
-      await _fireStore.collection("Expenses").add({
-        'accessoriesName': _gymAccessoriesNameController.text,
-        'accessoriesType': _gymAccessoriesTypeController.text,
-        'accessoriesExpense': "${_gymAccessoriesExpenseController.text} ₹",
-        'addedBy': _gymAccessoriesAddedByController.text,
-        'userUid': kCurrentUser?.uid,
-        'userProfileImage': imagePath.isEmpty ? kAvatarImagePath : imagePath,
+      setState(() {
+        isAdded = true;
       });
+      try {
+        await _fireStore.collection("Expenses").add({
+          'accessoriesName': _gymAccessoriesNameController.text,
+          'accessoriesType': _gymAccessoriesTypeController.text,
+          'accessoriesExpense': "${_gymAccessoriesExpenseController.text} ₹",
+          'addedBy': _gymAccessoriesAddedByController.text,
+          'userUid': kCurrentUser?.uid,
+          'userProfileImage': imagePath.isEmpty ? kAvatarImagePath : imagePath,
+        });
+        setState(() {
+          isAdded = false;
+        });
+        showMessage("Expense added successfully!");
+        Navigator.pop(context);
+        _gymAccessoriesNameController.clear();
+        _gymAccessoriesTypeController.clear();
+        _gymAccessoriesExpenseController.clear();
+        _gymAccessoriesAddedByController.clear();
+      } catch (e) {
+        showMessage("Please enter correct details!");
+      }
     } else {
-      debugPrint("failed");
+      showMessage("Please enter correct details!");
     }
-    _gymAccessoriesNameController.clear();
-    _gymAccessoriesTypeController.clear();
-    _gymAccessoriesExpenseController.clear();
-    _gymAccessoriesAddedByController.clear();
   }
 }
-
-// DropDownTextField _gymAccessoriesTypeTextField() => DropDownTextField(
-//         list: accessoriesTypeList,
-//         value: selectedAccessoriesType,
-//         title: "Accessories Type",
-//         focusNode: _gymAccessoriesTypeFocusNode,
-//         onChanged: (newValue) {
-//           setState(() => selectedAccessoriesType = newValue.toString());
-//         },
-//       );

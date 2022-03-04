@@ -31,7 +31,6 @@ BoxDecoration kUserProfileBoxDecoration = BoxDecoration(
 );
 
 //text styles
-
 const kUserEmailTextStyle = TextStyle(
   color: kGreyColor,
   fontSize: 16.0,

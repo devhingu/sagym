@@ -8,6 +8,8 @@ import '../../../../widgets/gym_expenses_list_tile.dart';
 import '../../../account/constants/user_profile_constants.dart';
 
 class GymExpensesList extends StatefulWidget {
+  static const String id = "gym_expenses_screen";
+
   const GymExpensesList({Key? key}) : super(key: key);
 
   @override
@@ -26,40 +28,46 @@ class _GymExpensesListState extends State<GymExpensesList> {
       ),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh:  () async {
+          onRefresh: () async {
             await Future.delayed(const Duration(seconds: 2));
           },
-          child: StreamBuilder<QuerySnapshot>(
-            stream: _fireStore.collection("Expenses").snapshots(),
-            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: kBlackColor,
-                  ),
-                );
-              }
-              return Padding(
-                padding:kAllSidePadding,
-                child: ListView.builder(
-                  physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                  itemCount: snapshot.data?.docs.length,
-                  itemBuilder: (ctx, index) {
-                    final doc = snapshot.data?.docs[index];
-                    return GymExpenseCardTile(
-                      accessoryName: doc![paramsAccessoriesName],
-                      accessoryPrice: doc[paramsAccessoriesExpense],
-                      accessoryType: doc[paramsAccessoriesType],
-                      addedBy: doc[paramsAddedBy],
-                      imagePath: doc[paramsUserProfileImage],
-                    );
-                  },
-                ),
-              );
-            },
-          ),
+          child: _gymStreamBuilder(),
         ),
       ),
     );
   }
+
+  StreamBuilder<QuerySnapshot<Object?>> _gymStreamBuilder() =>
+      StreamBuilder<QuerySnapshot>(
+        stream: _fireStore.collection("Expenses").snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: kBlackColor,
+              ),
+            );
+          }
+          return Padding(
+            padding: kAllSidePadding,
+            child: ListView.builder(
+              physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics()),
+              itemCount: snapshot.data?.docs.length,
+              itemBuilder: (ctx, index) {
+                final doc = snapshot.data?.docs[index];
+                return _gymExpenseCardTile(doc);
+              },
+            ),
+          );
+        },
+      );
+
+  GymExpenseCardTile _gymExpenseCardTile(dynamic doc) => GymExpenseCardTile(
+        accessoryName: doc![paramsAccessoriesName],
+        accessoryPrice: doc[paramsAccessoriesExpense],
+        accessoryType: doc[paramsAccessoriesType],
+        addedBy: doc[paramsAddedBy],
+        imagePath: doc[paramsUserProfileImage],
+      );
 }

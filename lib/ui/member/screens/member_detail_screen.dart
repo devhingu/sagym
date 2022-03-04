@@ -4,7 +4,7 @@ import 'package:gym/constants/constants.dart';
 import 'package:gym/ui/auth/constants/auth_constants.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
 import 'package:gym/ui/member/constants/member_constants.dart';
-import 'package:gym/widgets/reusable/reusable_methods.dart';
+import 'package:gym/constants/methods/reusable_methods.dart';
 
 import '../../../widgets/member/member_detail_data.dart';
 
@@ -104,11 +104,14 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
             children: [
               Row(
                 children: [
-                  FittedBox(
-                    child: Text(
-                      "${widget.doc[paramsFirstName]} ${widget.doc[paramsLastName]}",
-                      style: kMemberDetailNameTextStyle,
-                      overflow: TextOverflow.ellipsis,
+                  SizedBox(
+                    width: 200.0,
+                    child: FittedBox(
+                      child: Text(
+                        "${widget.doc[paramsFirstName]} ${widget.doc[paramsLastName]}",
+                        style: kMemberDetailNameTextStyle,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ),
                   widthSizedBox(width: 5.0),

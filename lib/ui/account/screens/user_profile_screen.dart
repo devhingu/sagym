@@ -1,19 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/service/firebase_auth_service.dart';
-import 'package:gym/ui/auth/screens/change_password.dart';
+import 'package:gym/ui/auth/screens/changepassword/change_password.dart';
 import 'package:gym/ui/auth/screens/login/sign_in_screen.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
 import 'package:gym/ui/dashboard/screens/addexpenses/gym_expenses_list.dart';
-import 'package:gym/widgets/reusable/reusable_methods.dart';
+import 'package:gym/constants/methods/reusable_methods.dart';
 import '../../../widgets/profile/user_profile_list_tile.dart';
-import '../../member/constants/member_constants.dart';
 import '../constants/user_profile_constants.dart';
 
 class UserProfileScreen extends StatefulWidget {
+  static const String id = "user_profile_screen";
+
   const UserProfileScreen({Key? key}) : super(key: key);
 
   @override
@@ -21,16 +21,18 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
-  final user = FirebaseAuth.instance.currentUser;
-  final _fireStore = FirebaseFirestore.instance;
+  final _currentUser = FirebaseAuth.instance.currentUser;
+  final _fireStoreInstance = FirebaseFirestore.instance;
   String userName = "";
   String email = "";
   String imagePath = "";
 
   Future getCurrentUser() async {
-    if (user?.displayName == null || user?.displayName == "") {
-      final snapshots =
-          await _fireStore.collection("Trainers").doc(user?.email).get();
+    if (_currentUser?.displayName == null || _currentUser?.displayName == "") {
+      final snapshots = await _fireStoreInstance
+          .collection("Trainers")
+          .doc(_currentUser?.email)
+          .get();
       setState(() {
         userName = snapshots.get("userName");
         email = snapshots.get("email");
@@ -38,10 +40,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       });
     } else {
       try {
-        if (user != null) {
-          userName = user!.displayName!;
-          email = user!.email!;
-          imagePath = user!.photoURL!;
+        if (_currentUser != null) {
+          userName = _currentUser!.displayName!;
+          email = _currentUser!.email!;
+          imagePath = _currentUser!.photoURL!;
         }
       } catch (e) {
         debugPrint(e.toString());
@@ -66,28 +68,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              padding: const EdgeInsets.all(16.0),
-              width: size.width,
-              height: size.height * 0.25,
-              decoration: kUserProfileBoxDecoration,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _userNameText(),
-                      heightSizedBox(height: 10.0),
-                      _emailText(),
-                    ],
-                  ),
-                  _circleAvatar(),
-                ],
-              ),
-            ),
+            _topContainer(size),
             heightSizedBox(height: 10.0),
             Column(
               children: [
@@ -103,6 +84,29 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       ),
     );
   }
+
+  Container _topContainer(Size size) => Container(
+        padding: const EdgeInsets.all(16.0),
+        width: size.width,
+        height: size.height * 0.25,
+        decoration: kUserProfileBoxDecoration,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _userNameText(),
+                heightSizedBox(height: 10.0),
+                _emailText(),
+              ],
+            ),
+            _circleAvatar(),
+          ],
+        ),
+      );
 
   UserProfileListTile _getFeedbackTile() => UserProfileListTile(
         onPress: () {},
@@ -130,21 +134,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         title: kChangePassword,
         icon: kPasswordIcon,
         onPress: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const ChangePasswordScreen()));
+          navigatePushNamedMethod(context, ChangePasswordScreen.id);
         },
       );
 
   UserProfileListTile _getGymExpenseTile() => UserProfileListTile(
         onPress: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const GymExpensesList(),
-            ),
-          );
+          navigatePushNamedMethod(context, GymExpensesList.id);
         },
         icon: kPriceIcon,
         title: kGymExpenses,

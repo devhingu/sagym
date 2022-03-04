@@ -7,7 +7,6 @@ class MemberData with ChangeNotifier {
   int inActiveCount = 0;
   int totalUser = 0;
   int dueUserCount = 0;
-  bool status = false;
 
   int get receivedAmounts {
     return receivedAmount;

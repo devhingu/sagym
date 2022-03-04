@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:gym/service/firebase_auth_service.dart';
 import 'package:gym/ui/auth/constants/auth_constants.dart';
 import 'package:gym/ui/dashboard/screens/home_page.dart';
-import 'package:gym/widgets/reusable/reusable_methods.dart';
+import 'package:gym/constants/methods/reusable_methods.dart';
 import 'auth_custom_button.dart';
 
 class SocialMediaButton extends StatelessWidget {

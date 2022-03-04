@@ -8,7 +8,7 @@ import 'package:gym/ui/auth/screens/signup/sign_up_screen.dart';
 import 'package:gym/widgets/auth/bottom_rich_text.dart';
 import 'package:gym/widgets/auth/social_media_button.dart';
 import 'package:gym/widgets/custom_button.dart';
-import 'package:gym/widgets/reusable/reusable_methods.dart';
+import 'package:gym/constants/methods/reusable_methods.dart';
 import 'package:gym/widgets/text_form_field_container.dart';
 import 'package:gym/widgets/top_logo_title_widget.dart';
 
@@ -28,6 +28,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
+  bool isSignIn = false;
 
   @override
   void dispose() {
@@ -81,15 +82,23 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  _signInButton(BuildContext context) => CustomButton(
-        title: kSignIn,
-        onPress: () async {
-          await _signInWithEmailPassword();
-          if (FirebaseAuth.instance.currentUser?.email != null) {
-            navigatePushReplacementMethod(context, HomePage.id);
-          }
-        },
-      );
+  _signInButton(BuildContext context) => isSignIn
+      ? customCircularIndicator()
+      : CustomButton(
+          title: kSignIn,
+          onPress: () async {
+            setState(() {
+              isSignIn = true;
+            });
+            await _signInWithEmailPassword();
+            setState(() {
+              isSignIn = false;
+            });
+            if (FirebaseAuth.instance.currentUser?.email != null) {
+              navigatePushReplacementMethod(context, HomePage.id);
+            }
+          },
+        );
 
   TextFormFieldContainer _passwordTextField(BuildContext context) =>
       TextFormFieldContainer(
@@ -134,8 +143,6 @@ class _SignInScreenState extends State<SignInScreen> {
       );
 
   _signInWithEmailPassword() async {
-    var emailValid = RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
     FirebaseService firebaseService = FirebaseService();
 
     try {
@@ -143,10 +150,12 @@ class _SignInScreenState extends State<SignInScreen> {
         email: _emailController.text,
         password: _passwordController.text,
       );
+      showMessage("Login Successfully!");
+
       _emailController.clear();
       _passwordController.clear();
     } catch (e) {
-      showSnackBar(content: e.toString());
+      showMessage("Please enter correct details!");
     }
   }
 }
