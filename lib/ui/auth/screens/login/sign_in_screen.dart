@@ -1,6 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gym/constants/constants.dart';
-import 'package:gym/service/firebase_service.dart';
+import 'package:gym/service/firebase_auth_service.dart';
 import 'package:gym/ui/auth/constants/auth_constants.dart';
 import 'package:gym/ui/auth/screens/forgotpassword/forgot_password.dart';
 import 'package:gym/ui/auth/screens/signup/sign_up_screen.dart';
@@ -67,8 +68,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       startText: kDoNotHaveAnAccount,
                       endText: kSignUp,
                       onPress: () {
-                        navigatePushReplacementMethod(
-                            context, SignUpScreen.id);
+                        navigatePushReplacementMethod(context, SignUpScreen.id);
                       },
                     ),
                   ),
@@ -84,8 +84,10 @@ class _SignInScreenState extends State<SignInScreen> {
   _signInButton(BuildContext context) => CustomButton(
         title: kSignIn,
         onPress: () async {
-          await signInWithEmail();
-          navigatePushReplacementMethod(context, HomePage.id);
+          await _signInWithEmailPassword();
+          if (FirebaseAuth.instance.currentUser?.email != null) {
+            navigatePushReplacementMethod(context, HomePage.id);
+          }
         },
       );
 
@@ -131,42 +133,20 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       );
 
-  signInWithEmail() async {
+  _signInWithEmailPassword() async {
     var emailValid = RegExp(
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+    FirebaseService firebaseService = FirebaseService();
 
-    if (_passwordController.text.trim().isNotEmpty &&
-        _emailController.text.trim().isNotEmpty &&
-        emailValid.hasMatch(_emailController.text)) {
-      FirebaseService firebaseService = FirebaseService();
+    try {
       await firebaseService.signInWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
-    } else {
-      debugPrint("failed");
+      _emailController.clear();
+      _passwordController.clear();
+    } catch (e) {
+      showSnackBar(content: e.toString());
     }
-    _emailController.clear();
-    _passwordController.clear();
   }
 }
-
-// Row(children: <Widget>[
-// Expanded(
-// child: Container(
-// margin: const EdgeInsets.only(left: 32.0, right: 10.0),
-// child: const Divider(
-// color: kGreyColor,
-// height: 50,
-// )),
-// ),
-// const Text("OR", style: kTextFormFieldLabelTextStyle,),
-// Expanded(
-// child: Container(
-// margin: const EdgeInsets.only(left: 10.0, right: 32.0),
-// child: const Divider(
-// color: kGreyDarkColor,
-// height: 50,
-// )),
-// ),
-// ]),

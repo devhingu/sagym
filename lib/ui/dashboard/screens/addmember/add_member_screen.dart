@@ -40,15 +40,16 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
   final FocusNode _weightFocusNode = FocusNode();
   final FocusNode _batchFocusNode = FocusNode();
   String _isActive = "true";
-
+  String selectedBatch = "Morning";
   DateTime selectedDate = DateTime.now();
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(1901, 1),
-        lastDate: DateTime(2100));
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(1901, 1),
+      lastDate: DateTime(2100),
+    );
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
@@ -58,14 +59,11 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
     }
   }
 
-  String selectedBatch = "Morning";
-
   @override
   void dispose() {
     super.dispose();
     _firstNameFocusNode.dispose();
     _lastNameFocusNode.dispose();
-    _emailFocusNode.dispose();
     _phoneFocusNode.dispose();
     _addressFocusNode.dispose();
     _dobFocusNode.dispose();
@@ -265,16 +263,7 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
               inputType: TextInputType.text,
               controller: _dobController,
               focusNode: _dobFocusNode,
-              onSubmit: (String? value) async {
-                await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2019, 1),
-                  lastDate: DateTime(2021, 12),
-                ).then((pickedDate) {
-                  //do whatever you want
-                });
-              }),
+              onSubmit: (String? value) {}),
         ),
       );
 

@@ -1,8 +1,12 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:custom_info_window/custom_info_window.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:gym/constants/color_constants.dart';
+import 'package:gym/constants/constants.dart';
+import 'package:clippy_flutter/clippy_flutter.dart';
 
 class LocationScreen extends StatefulWidget {
   const LocationScreen({Key? key}) : super(key: key);
@@ -15,17 +19,8 @@ class _LocationScreenState extends State<LocationScreen> {
   final Set<Marker> _markers = {};
   late BitmapDescriptor mapMarker;
   late GoogleMapController mapController;
-  // CustomInfoWindowController _customInfoWindowController =
-  //     CustomInfoWindowController();
-
-  void getLocations() async {}
-
-  @override
-  void initState() {
-    super.initState();
-    setCustomMarker();
-    getLocations();
-  }
+  final CustomInfoWindowController _customInfoWindowController =
+      CustomInfoWindowController();
 
   void setCustomMarker() async {
     mapMarker = await BitmapDescriptor.fromAssetImage(
@@ -33,6 +28,8 @@ class _LocationScreenState extends State<LocationScreen> {
   }
 
   void _onMapCreated(GoogleMapController controller) async {
+    _customInfoWindowController.googleMapController = controller;
+
     String data =
         await DefaultAssetBundle.of(context).loadString("assets/data.json");
     final jsonResult = jsonDecode(data);
@@ -41,41 +38,80 @@ class _LocationScreenState extends State<LocationScreen> {
       setState(() {
         _markers.add(
           Marker(
-            markerId:  MarkerId("id-$i"),
+            markerId: MarkerId("id-$i"),
             position: LatLng(
               double.parse(jsonResult["locations"][i]["latitude"]),
               double.parse(jsonResult["locations"][i]["longitude"]),
             ),
             icon: mapMarker,
-            infoWindow: InfoWindow(
-              title: jsonResult["locations"][i]["gymname"],
-              snippet: jsonResult["locations"][i]["address"],
-            ),
+            onTap: () {
+              _customInfoWindowController.addInfoWindow!(
+                _mapCustomInfoWindow(jsonResult, i),
+                LatLng(
+                  double.parse(jsonResult["locations"][i]["latitude"]),
+                  double.parse(jsonResult["locations"][i]["longitude"]),
+                ),
+              );
+            },
           ),
         );
       });
     }
   }
 
+  Column _mapCustomInfoWindow(jsonResult, int i) => Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: kMainColor,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    jsonResult["locations"][i]["gymname"],
+                    style: kAppTitleTextStyle.copyWith(color: kWhiteColor),
+                  ),
+                  Text(
+                    jsonResult["locations"][i]["address"],
+                    style: const TextStyle(color: kWhiteColor),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Triangle.isosceles(
+            edge: Edge.BOTTOM,
+            child: Container(
+              color: kMainColor,
+              width: 20.0,
+              height: 10.0,
+            ),
+          ),
+        ],
+      );
+
+  @override
+  void dispose() {
+    _customInfoWindowController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setCustomMarker();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GoogleMap(
-        onMapCreated: _onMapCreated,
-        markers: _markers,
-        initialCameraPosition: const CameraPosition(
-          target: LatLng(23.024548, 72.507365),
-          zoom: 15,
-        ),
-      ),
-    );
-  }
-}
-
-/* body: Stack(
+      body: Stack(
         children: <Widget>[
           GoogleMap(
-
             onTap: (position) {
               _customInfoWindowController.hideInfoWindow!();
             },
@@ -85,16 +121,18 @@ class _LocationScreenState extends State<LocationScreen> {
             onMapCreated: _onMapCreated,
             markers: _markers,
             initialCameraPosition: const CameraPosition(
-              target: LatLng(22.979771, 72.492714),
+              target: LatLng(23.024548, 72.507365),
               zoom: 15,
             ),
-
           ),
           CustomInfoWindow(
             controller: _customInfoWindowController,
-            height: 75,
-            width: 150,
-            offset: 50,
+            width: 350,
+            offset: 30,
+            height: 130,
           ),
         ],
-      ),*/
+      ),
+    );
+  }
+}

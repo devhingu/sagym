@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
-import 'package:gym/service/list_provider.dart';
+import 'package:gym/provider/home_provider.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
 import 'package:gym/widgets/dashboard/custom_card.dart';
 import 'package:gym/widgets/dashboard/custom_data_column.dart';
@@ -28,18 +28,33 @@ class _HomeScreenState extends State<HomeScreen> {
   String imagePath = "";
   String day = "";
 
-  void getCurrentDate(){
+  void getCurrentDate() {
     DateTime now = DateTime.now();
     day =
-    "${DateFormat('EEEE').format(now)}, ${DateFormat("MMMM").format(now)} ${now.day}, ${now.year}";
+        "${DateFormat('EEEE').format(now)}, ${DateFormat("MMMM").format(now)} ${now.day}, ${now.year}";
+  }
+
+  Future getCurrentData() async {
+    var snapshot = _fireStore
+        .collection("Trainers")
+        .doc(user?.email)
+        .collection("memberDetails")
+        .snapshots();
+
+    snapshot.forEach((element) {
+      Provider.of<MemberData>(context, listen: false)
+          .updateAmount(element.docs);
+      Provider.of<MemberData>(context, listen: false)
+          .updateUserStatus(element.docs);
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    getCurrentData(context);
     getCurrentUser();
     getCurrentDate();
+    getCurrentData();
   }
 
   Future getCurrentUser() async {
@@ -69,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: RefreshIndicator(
           onRefresh: () async {
             await Future.delayed(const Duration(seconds: 2));
-            getCurrentData(context);
+            getCurrentData();
           },
           child: SingleChildScrollView(
             child: Stack(
@@ -153,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(child: _homeCustomAppBar()),
+            _homeCustomAppBar(),
             Expanded(child: _totalMembersWidget()),
             Expanded(
               child: Text(
@@ -183,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
 
   Padding _homeCustomAppBar() => Padding(
-        padding: const EdgeInsets.only(bottom: 15.0),
+        padding: const EdgeInsets.only(bottom: 18.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -196,11 +211,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             imagePath.isEmpty
                 ? const CircleAvatar(
-                    radius: 25.0,
+                    radius: 20.0,
                     backgroundImage: AssetImage(kAvatarImagePath),
                   )
                 : CircleAvatar(
-                    radius: 25.0,
+                    radius: 20.0,
                     backgroundImage: NetworkImage(imagePath),
                   )
           ],

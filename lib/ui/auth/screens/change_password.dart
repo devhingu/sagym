@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gym/constants/constants.dart';
-import 'package:gym/service/firebase_service.dart';
+import 'package:gym/service/firebase_auth_service.dart';
 import 'package:gym/ui/auth/constants/auth_constants.dart';
 import 'package:gym/ui/auth/screens/login/sign_in_screen.dart';
 import 'package:gym/widgets/custom_button.dart';

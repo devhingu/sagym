@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gym/constants/color_constants.dart';
 import 'package:gym/constants/constants.dart';
-import 'package:gym/service/list_provider.dart';
+import 'package:gym/provider/home_provider.dart';
 import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
 import 'package:gym/ui/member/constants/member_constants.dart';
 import 'package:gym/ui/member/screens/member_detail_screen.dart';
@@ -64,7 +64,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
     if (_searchController.text != "") {
       for (var element in List.from(_allResults)) {
         personName =
-            "${element["firstName"]} ${element["lastName"]}".toLowerCase();
+            "${element["firstName"]} ${element["lastName"]}".trim().toLowerCase();
         if (personName.contains(_searchController.text.toLowerCase())) {
           showResults.add(element);
         }
@@ -97,7 +97,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const ReminderScreen()));
+                      builder: (context) => const ReminderScreen(),),);
             },
             icon: const Icon(Icons.notifications),
           ),

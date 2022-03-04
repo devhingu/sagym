@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gym/constants/constants.dart';
-import 'package:gym/service/firebase_service.dart';
+import 'package:gym/service/firebase_auth_service.dart';
 import 'package:gym/ui/dashboard/screens/home_page.dart';
 import 'package:gym/ui/auth/constants/auth_constants.dart';
 import 'package:gym/ui/auth/screens/login/sign_in_screen.dart';
@@ -92,8 +92,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
             email: _emailController.text,
             password: _passwordController.text,
           );
-          await _saveDetailsToFirebaseFirestore();
-          navigatePushReplacementMethod(context, HomePage.id);
+          _saveDetailsToFirebaseFirestore();
+          if (FirebaseAuth.instance.currentUser?.email != null) {
+            navigatePushReplacementMethod(context, HomePage.id);
+          }
         },
       );
 
@@ -147,14 +149,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _passwordController.text.trim().isNotEmpty &&
         _emailController.text.trim().isNotEmpty &&
         emailValid.hasMatch(_emailController.text)) {
-
       await _fireStore.collection("Trainers").doc(kCurrentUser?.email).set({
         'userName': _userNameController.text,
         'email': _emailController.text,
         'password': _passwordController.text,
       });
+
+      showSnackBar(content: "Sign up successfully!");
     } else {
-      debugPrint("failed");
+      showSnackBar(content: "Please Enter details!");
     }
 
     _userNameController.clear();

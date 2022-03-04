@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants/color_constants.dart';
-import '../../service/list_provider.dart';
+import '../../provider/home_provider.dart';
 
 SizedBox widthSizedBox({required double width}) => SizedBox(
       width: width,
@@ -41,20 +41,10 @@ OutlineInputBorder textFormFieldInputBorder() {
   );
 }
 
-final _fireStore = FirebaseFirestore.instance;
-final user = FirebaseAuth.instance.currentUser;
-
-Future getCurrentData(context) async {
-  var snapshot = _fireStore
-      .collection("Trainers")
-      .doc(user?.email)
-      .collection("memberDetails")
-      .snapshots();
-
-  snapshot.forEach((element) {
-    Provider.of<MemberData>(context, listen: false)
-        .updateAmount(element.docs);
-    Provider.of<MemberData>(context, listen: false)
-        .updateUserStatus(element.docs);
-  });
+SnackBar showSnackBar({required String content}) {
+  return SnackBar(
+    content: Text(content),
+    duration: const Duration(seconds: 1),
+    behavior: SnackBarBehavior.floating,
+  );
 }

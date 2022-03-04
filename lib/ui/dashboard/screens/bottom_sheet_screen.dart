@@ -9,6 +9,7 @@ import 'package:gym/widgets/reusable/reusable_methods.dart';
 import 'package:intl/intl.dart';
 
 import '../../../widgets/elevated_custom_button.dart';
+import '../../../widgets/text_form_field_container.dart';
 import 'addmember/add_member_screen.dart';
 
 class BottomSheetScreen extends StatefulWidget {
@@ -19,7 +20,26 @@ class BottomSheetScreen extends StatefulWidget {
 }
 
 class _BottomSheetScreenState extends State<BottomSheetScreen> {
-  TextEditingController _messageController = TextEditingController();
+  final TextEditingController _messageController = TextEditingController();
+  final TextEditingController _startDateController = TextEditingController();
+  final FocusNode _startDateFocusNode = FocusNode();
+  DateTime selectedDate = DateTime.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(1901, 1),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        _startDateController.value = TextEditingValue(
+            text: "${picked.day}-${picked.month}-${picked.year}");
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +57,6 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
           bottomSheetCard(
             title: kSendReminder,
             onPress: () {
-              Navigator.pop(context);
               showModalBottomSheet(
                 context: context,
                 elevation: 15.0,
@@ -78,46 +97,50 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
     );
   }
 
-  Column _bottomCardDataColumn(BuildContext context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                kSendReminder,
-                style: kAppTitleTextStyle,
-              ),
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-          TextFormField(
-            controller: _messageController,
-            maxLines: 6,
-            style: kTextFormFieldTextStyle,
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.all(10.0),
-              border: textFormFieldInputBorder(),
-              hintText: "Message",
-              labelStyle: kTextFormFieldLabelTextStyle,
-              focusedBorder: textFormFieldInputBorder(),
+  Widget _bottomCardDataColumn(BuildContext context) => SingleChildScrollView(
+    child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  kSendReminder,
+                  style: kAppTitleTextStyle,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
             ),
-          ),
-          heightSizedBox(height: 10.0),
-          ElevatedCustomButton(
-            onPress: () async {
-              await _saveReminderDataToFirebase();
-              Navigator.pop(context);
-            },
-            title: kSendReminder,
-          ),
-        ],
-      );
+            _dateTextField(),
+            heightSizedBox(height: 10.0),
+            TextFormField(
+              controller: _messageController,
+              maxLines: 6,
+              style: kTextFormFieldTextStyle,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.all(10.0),
+                border: textFormFieldInputBorder(),
+                hintText: "Message",
+                labelStyle: kTextFormFieldLabelTextStyle,
+                focusedBorder: textFormFieldInputBorder(),
+              ),
+            ),
+            heightSizedBox(height: 10.0),
+            ElevatedCustomButton(
+              onPress: () async {
+                await _saveReminderDataToFirebase();
+                Navigator.pop(context);
+              },
+              title: kSendReminder,
+            ),
+          ],
+        ),
+  );
 
   GestureDetector bottomSheetCard(
           {required VoidCallback onPress, required String title}) =>
@@ -136,10 +159,22 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
         ),
       );
 
+  GestureDetector _dateTextField() => GestureDetector(
+        onTap: () => _selectDate(context),
+        child: AbsorbPointer(
+          child: TextFormFieldContainer(
+              label: "Select Date",
+              inputType: TextInputType.text,
+              controller: _startDateController,
+              focusNode: _startDateFocusNode,
+              onSubmit: (String? value) {}),
+        ),
+      );
+
   _saveReminderDataToFirebase() async {
     final kCurrentUser = FirebaseAuth.instance.currentUser;
     final _fireStore = FirebaseFirestore.instance;
-    String currentDate ="~ ${DateFormat.yMEd().add_jm().format(DateTime.now())}";
+    String currentDate = DateFormat.yMEd().add_jm().format(DateTime.now());
 
     if (_messageController.text.trim().isNotEmpty) {
       await _fireStore
@@ -150,7 +185,19 @@ class _BottomSheetScreenState extends State<BottomSheetScreen> {
         "reminder": _messageController.text,
         "currentStamp": currentDate,
       });
+      await _addEventToCalender(_messageController.text);
+      Navigator.pop(context);
     }
     _messageController.clear();
+  }
+
+  _addEventToCalender(description) {
+    final Event event = Event(
+      title: 'Due Reminder',
+      description: description,
+      startDate: selectedDate,
+      endDate: selectedDate,
+    );
+    Add2Calendar.addEvent2Cal(event);
   }
 }

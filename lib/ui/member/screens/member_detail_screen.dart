@@ -167,7 +167,7 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
               color: kWhiteColor,
             ),
             Text(
-              "Body Fit Gym",
+              kTitleSaGym,
               style: kAppTitleTextStyle.copyWith(color: kWhiteColor),
             )
           ],

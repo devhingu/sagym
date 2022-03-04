@@ -1,9 +1,9 @@
-// import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gym/constants/color_constants.dart';
-import 'package:gym/service/list_provider.dart';
+import 'package:gym/provider/home_provider.dart';
+import 'package:gym/ui/auth/constants/auth_constants.dart';
 import 'package:gym/ui/auth/screens/forgotpassword/forgot_password.dart';
 import 'package:gym/ui/auth/screens/login/sign_in_screen.dart';
 import 'package:gym/ui/auth/screens/signup/sign_up_screen.dart';
@@ -11,14 +11,15 @@ import 'package:gym/ui/dashboard/screens/addexpenses/add_expenses.dart';
 import 'package:gym/ui/dashboard/screens/addmember/add_member_screen.dart';
 import 'package:gym/ui/dashboard/screens/home_page.dart';
 import 'package:gym/ui/dashboard/screens/home_screen.dart';
+import 'package:gym/ui/splash/splash_screen.dart';
+import 'package:gym/ui/welcome/screens/welcome_screen.dart';
 import 'package:provider/provider.dart';
-// import 'package:gym/ui/welcome/screens/welcome_screen.dart';
 
-void main() async{
-  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-  //     overlays: [SystemUiOverlay.bottom]);
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+      overlays: [SystemUiOverlay.bottom]);
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     runApp(const MyApp());
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
       create: (context) => MemberData(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Gym Management App',
+        title: kTitleSaGym,
         theme: ThemeData(
           visualDensity: VisualDensity.adaptivePlatformDensity,
           fontFamily: "Poppins",
@@ -44,8 +45,7 @@ class MyApp extends StatelessWidget {
           ),
           scaffoldBackgroundColor: kBackgroundColor,
         ),
-        //home: SplashScreen(),
-        initialRoute: SignInScreen.id,
+        initialRoute: SplashScreen.id,
         routes: {
           SignInScreen.id: (context) => const SignInScreen(),
           SignUpScreen.id: (context) => const SignUpScreen(),
@@ -54,9 +54,8 @@ class MyApp extends StatelessWidget {
           HomeScreen.id: (context) => const HomeScreen(),
           AddMemberScreen.id: (context) => const AddMemberScreen(),
           AddExpensesScreen.id: (context) => const AddExpensesScreen(),
-          // AddMemberPaymentScreen.id: (context) => const AddMemberPaymentScreen(e),
-
-          //WelcomeScreen.id: (context) => const WelcomeScreen(),
+          WelcomeScreen.id: (context) => const WelcomeScreen(),
+          SplashScreen.id: (context) => const SplashScreen(),
         },
       ),
     );

@@ -11,7 +11,9 @@ import 'package:gym/ui/member/screens/member_list.dart';
 import 'package:gym/widgets/reusable/reusable_methods.dart';
 import 'package:gym/widgets/text_form_field_container.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
+import '../../../../provider/home_provider.dart';
 import '../../../../widgets/drop_down_text_field.dart';
 import '../../../../widgets/elevated_custom_button.dart';
 
@@ -62,6 +64,21 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
         debugPrint(e.toString());
       }
     }
+  }
+
+  Future getCurrentData() async {
+    var snapshot = _fireStore
+        .collection("Trainers")
+        .doc(kCurrentUser?.email)
+        .collection("memberDetails")
+        .snapshots();
+
+    snapshot.forEach((element) {
+      Provider.of<MemberData>(context, listen: false)
+          .updateAmount(element.docs);
+      Provider.of<MemberData>(context, listen: false)
+          .updateUserStatus(element.docs);
+    });
   }
 
   @override
@@ -159,7 +176,7 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
             ElevatedCustomButton(
               onPress: () async {
                 await _saveMemberDetailsToFirestore();
-                await getCurrentData(context);
+                //await getCurrentData(context);
                 Navigator.pop(context);
               },
               title: kAddMember,
@@ -297,6 +314,7 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
         'staffName': _staffNameController.text,
       });
 
+      await getCurrentData();
     } else {
       debugPrint("failed");
     }

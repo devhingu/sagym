@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -6,6 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final _fireStore = FirebaseFirestore.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final fb = FacebookLogin();
 
@@ -23,6 +25,13 @@ class FirebaseService {
       );
 
       await _auth.signInWithCredential(credential);
+      await _fireStore
+          .collection("Trainers")
+          .doc(googleSignInAccount.email)
+          .set({
+        'userName': googleSignInAccount.displayName,
+        'email': googleSignInAccount.email,
+      });
     } on FirebaseAuthException catch (e) {
       debugPrint(e.message);
       rethrow;
@@ -60,14 +69,14 @@ class FirebaseService {
         final result =
             await FirebaseAuth.instance.signInWithCredential(authCredential);
 
-        final profile = await fb.getUserProfile();
-        debugPrint('Hello, ${profile!.name}! You ID: ${profile.userId}');
-        final imageUrl = await fb.getProfileImageUrl(width: 100);
-        debugPrint('Your profile image: $imageUrl');
-        final email = await fb.getUserEmail();
-        if (email != null) {
-          debugPrint('And your email is $email');
-        }
+        // final profile = await fb.getUserProfile();
+        // final email = await fb.getUserEmail();
+
+        final kCurrentUser = _auth.currentUser;
+        await _fireStore.collection("Trainers").doc(kCurrentUser?.email).set({
+          'userName': kCurrentUser?.displayName,
+          'email': kCurrentUser?.email,
+        });
         break;
       case FacebookLoginStatus.cancel:
         break;
@@ -78,8 +87,8 @@ class FirebaseService {
   }
 
   Future<void> signOutFromFirebase() async {
-    await _googleSignIn.signOut();
-    await _auth.signOut();
-    await fb.logOut();
+    _googleSignIn.signOut();
+    _auth.signOut();
+    fb.logOut();
   }
 }

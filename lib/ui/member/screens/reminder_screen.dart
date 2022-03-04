@@ -1,14 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gym/constants/constants.dart';
-import 'package:gym/ui/account/constants/user_profile_constants.dart';
-import 'package:gym/ui/dashboard/constants/dashboard_constants.dart';
-import 'package:gym/widgets/reusable/reusable_methods.dart';
-
 import '../../../constants/color_constants.dart';
 import '../../../widgets/reminder_list_tile.dart';
-import '../constants/member_constants.dart';
 
 class ReminderScreen extends StatefulWidget {
   const ReminderScreen({Key? key}) : super(key: key);
