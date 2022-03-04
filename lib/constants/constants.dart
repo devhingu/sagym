@@ -3,7 +3,7 @@ import 'color_constants.dart';
 
 //text styles
 const kAppTitleTextStyle = TextStyle(
-  fontSize: 25.0,
+  fontSize: 22.0,
   fontWeight: FontWeight.bold,
   color: kBlackColor,
 );
