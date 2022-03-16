@@ -12,6 +12,7 @@ import '../../../../constants/text_style_constants.dart';
 import '../../../../utils/methods/reusable_methods.dart';
 import '../../../../utils/models/member_detail_model.dart';
 import '../../../../utils/models/member_membership_model.dart';
+import '../../../../widgets/add_success_container.dart';
 import '../../../../widgets/text_form_field_container.dart';
 import '../../../../provider/member_provider.dart';
 import '../../../../widgets/drop_down_text_field.dart';
@@ -112,7 +113,7 @@ class _AddMemberPaymentScreenState extends State<AddMemberPaymentScreen> {
       child: Scaffold(
         body: SafeArea(
           child: isAdded
-              ? _successContainer(size)
+              ? const AddSuccessContainer(message: "Member Added Successfully!",)
               : SingleChildScrollView(
                   child: Stack(
                     children: [

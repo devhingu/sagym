@@ -1,0 +1,58 @@
+{
+   "locations":[
+      {
+         "latitude":"23.024548",
+         "longitude":"72.507365",
+         "gymname":"Fitness Forever Gym",
+         "address":"3rd Floor wide angle multiplex S.G.Highway, Ahmedabad."
+      },
+      {
+         "latitude":"23.027100",
+         "longitude":"72.505774",
+         "gymname":"Anytime Fitness",
+         "address":"216 - 219, Shivalik Shilp, 2nd floor, Iscon Circle, Ahmedabad."
+      },
+      {
+         "latitude":"23.031925",
+         "longitude":"72.511133",
+         "gymname":"Plus Fitness",
+         "address":"Devashish business park, Bodak Dev, Ahmedabad."
+      },
+      {
+         "latitude":"23.023165",
+         "longitude":"72.507014",
+         "gymname":"High 5 Performance",
+         "address":"Mondeal Heights, A-308 Next to Novotel Hotel, Ramdev Nagar, Ahmedabad."
+      },
+      {
+         "latitude":"23.062895",
+         "longitude":"72.508190",
+         "gymname":"Studio de' physique",
+         "address":"Sarkhej - Gandhinagar Hwy, Ramdev Nagar, Ahmedabad."
+      },
+      {
+         "latitude":"23.026839",
+         "longitude":"72.509821",
+         "gymname":"Armstrong The Gym - Ahmedabad's Biggest Gym",
+         "address":"3rd floor, Gulmohar Park Mall, Satellite Rd, Satellite, Ahmedabad."
+      },
+      {
+         "latitude":"23.026715",
+         "longitude":"72.509180",
+         "gymname":"Cult Satellite",
+         "address":"2nd Floor, Sarthik Complex, Satellite Rd, Ramdev Nagar, Ahmedabad."
+      },
+      {
+         "latitude":"23.012398",
+         "longitude":"72.514596",
+         "gymname":"Gym Lounge Premium Prahlladnagar",
+         "address":"1st Floor, Dev Aurum, Anand Nagar, Shyamal Cross Rd, Prahlad Nagar, Ahmedabad."
+      },
+      {
+         "latitude":"23.012166",
+         "longitude":"72.507983",
+         "gymname":"I Lift the Gym",
+         "address":"100 Feet Rd, above Kotak Mahindra Bank, Prahlad Nagar, Ahmedabad."
+      }
+   ]
+}

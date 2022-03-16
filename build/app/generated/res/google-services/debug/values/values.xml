@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">1062097194736-bipkb94tl30gg4mdaf1r1j7tvk3ahugf.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">1062097194736</string>
+    <string name="google_api_key" translatable="false">AIzaSyCyHV90WshjN-zudnqMzy-hKOM44HTYo7k</string>
+    <string name="google_app_id" translatable="false">1:1062097194736:android:d7ed812c3edb1600227c35</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyCyHV90WshjN-zudnqMzy-hKOM44HTYo7k</string>
+    <string name="google_storage_bucket" translatable="false">sagym-28a60.appspot.com</string>
+    <string name="project_id" translatable="false">sagym-28a60</string>
+</resources>

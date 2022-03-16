@@ -11,6 +11,7 @@ import '../../../../constants/string_constants.dart';
 import '../../../../constants/text_style_constants.dart';
 import '../../../../utils/methods/reusable_methods.dart';
 import '../../../../utils/models/expenses_model.dart';
+import '../../../../widgets/add_success_container.dart';
 import '../../../../widgets/drop_down_text_field.dart';
 import '../../../../widgets/elevated_custom_button.dart';
 import '../../../../widgets/text_form_field_container.dart';
@@ -94,22 +95,24 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Stack(
-            children: [
-              _backgroundContainer(size),
-              Container(
-                padding: kAllSideBigPadding,
-                margin: EdgeInsets.only(
-                  top: size.height * 0.07,
-                ),
-                child: Container(
-                  decoration: kCardBoxDecoration,
-                  child: Padding(
-                    padding: kAllSidePadding,
-                    child: isAdded
-                        ? customCircularIndicator()
-                        : Form(
+        child: isAdded
+            ? const AddSuccessContainer(
+                message: "Expense Added Successfully!",
+              )
+            : SingleChildScrollView(
+                child: Stack(
+                  children: [
+                    _backgroundContainer(size),
+                    Container(
+                      padding: kAllSideBigPadding,
+                      margin: EdgeInsets.only(
+                        top: size.height * 0.07,
+                      ),
+                      child: Container(
+                        decoration: kCardBoxDecoration,
+                        child: Padding(
+                          padding: kAllSidePadding,
+                          child: Form(
                             key: _formKey,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,12 +129,12 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
                               ],
                             ),
                           ),
-                  ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -269,7 +272,6 @@ class _AddExpensesScreenState extends State<AddExpensesScreen> {
         setState(() {
           isAdded = false;
         });
-        showMessage("Expense added successfully!");
         Navigator.pop(context);
         _gymAccessoriesNameController.clear();
         _gymAccessoriesTypeController.clear();

@@ -1,0 +1,2 @@
+com/javih/add_2_calendar/BuildConfig.java
+ com.javih.add_2_calendar.BuildConfig
